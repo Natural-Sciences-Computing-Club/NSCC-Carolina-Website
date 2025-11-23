@@ -2194,6 +2194,11 @@ body[data-theme="dark"] .moon-stars {
         pointer-events: auto !important;
         padding: 20px 16px 100px 16px;
         z-index: 10;
+        /* Add flexbox for vertical panel stacking */
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 20px;
     }
     
     /* Mobile Title Styling */
@@ -2203,8 +2208,7 @@ body[data-theme="dark"] .moon-stars {
         left: auto !important;
         right: auto !important;
         transform: none !important;
-        font-size: clamp(40px, 12vw, 60px) !important;
-        letter-spacing: clamp(5px, 2vw, 10px) !important;
+        /* Preserve desktop font sizing - removed font overrides */
         margin-bottom: 10px;
         margin-top: 20px;
         z-index: 20;
@@ -2215,106 +2219,38 @@ body[data-theme="dark"] .moon-stars {
         top: auto !important;
         left: auto !important;
         right: auto !important;
-        font-size: 11px !important;
-        letter-spacing: 3px !important;
+        /* Preserve desktop font sizing - removed font overrides */
         margin-bottom: 30px;
-        opacity: 0.9;
         z-index: 20;
     }
     
-    /* Reset panel positioning for mobile */
+    /* Reset panel positioning for mobile - preserve desktop height */
     .nav-panel {
         position: relative !important;
         width: 100% !important;
-        min-width: unset !important;
-        height: auto !important;
-        min-height: unset !important;
+        /* Preserve desktop height for consistent appearance */
+        height: 30vh !important;
+        min-height: 240px !important;
         transform: none !important;
         left: auto !important;
         top: auto !important;
         right: auto !important;
         bottom: auto !important;
-        margin: 0 !important;
-        cursor: pointer !important;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        margin: 0 0 20px 0 !important;
+        /* All other styles (glass effects, borders, shadows) inherited from desktop */
         z-index: 30;
     }
     
-    /* Mobile Panel Content - Collapsed State */
-    .nav-panel .panel-content {
-        padding: 16px !important;
-        padding-bottom: 16px !important;
-        height: auto !important;
-        min-height: 60px;
-        max-height: 60px;
-        overflow: hidden;
-        transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
+    /* Remove all mobile-specific panel content overrides */
+    /* Desktop panel content styling is preserved completely */
     
-    /* Expanded Panel State */
-    .nav-panel.mobile-expanded .panel-content {
-        max-height: 400px;
-        padding-bottom: 50px !important;
-    }
-    
-    /* Mobile Collapse Indicator */
-    .nav-panel::after {
-        content: '▼';
-        position: absolute;
-        right: 20px;
-        top: 20px;
-        font-size: 12px;
-        color: var(--accent-cyan);
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        pointer-events: none;
-        z-index: 10;
-    }
-    
-    .nav-panel.mobile-expanded::after {
-        transform: rotate(180deg);
-    }
-    
-    /* Panel styling adjustments */
-    .panel-icon {
-        width: 30px !important;
-        height: 30px !important;
-        margin-bottom: 0 !important;
-        position: absolute;
-        left: 16px;
-        top: 15px;
-        animation: none !important;
-    }
-    
-    .panel-title {
-        font-size: 18px !important;
-        margin-left: 50px;
-        margin-bottom: 5px !important;
-        margin-top: 2px;
-    }
-    
-    /* Hide elements in collapsed state */
-    .nav-panel:not(.mobile-expanded) .panel-description,
-    .nav-panel:not(.mobile-expanded) .panel-data {
-        opacity: 0;
-        visibility: hidden;
-    }
-    
-    /* Show elements in expanded state */
-    .nav-panel.mobile-expanded .panel-description {
-        opacity: 0.9;
-        visibility: visible;
-        margin-left: 0;
-        margin-top: 15px;
-        transition: opacity 0.3s 0.1s;
-        max-height: none;
-    }
-    
-    .nav-panel.mobile-expanded .panel-data {
-        opacity: 0.9;
-        visibility: visible;
-        transition: opacity 0.3s 0.15s;
-        position: absolute;
-        bottom: 15px;
+    /* Adjust expanded container for mobile viewport */
+    .expanded-container.expanded {
+        /* Smaller margins for mobile screen */
+        width: 95% !important;
+        height: 92% !important;
+        left: 2.5% !important;
+        top: 4% !important;
     }
 }
 
@@ -2352,13 +2288,46 @@ body[data-theme="dark"] .moon-stars {
         display: none !important;
     }
     
+    /* Layout adjustments only */
+    body.mobile-portrait .cyberspace {
+        position: relative !important;
+        width: 100%;
+        height: auto;
+        transform: none !important;
+        animation: none !important;
+        padding: 20px 16px 100px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    
     body.mobile-portrait .nav-panel {
         position: relative !important;
         width: 100% !important;
-        min-width: unset !important;
-        height: auto !important;
+        /* Preserve desktop height */
+        height: 30vh !important;
+        min-height: 240px !important;
         transform: none !important;
         left: auto !important;
         top: auto !important;
+        /* Preserve all desktop visual styling */
+    }
+    
+    body.mobile-portrait .chrome-title {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        transform: none !important;
+        margin-bottom: 10px;
+        margin-top: 20px;
+    }
+    
+    body.mobile-portrait .subtitle {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        margin-bottom: 30px;
     }
 }

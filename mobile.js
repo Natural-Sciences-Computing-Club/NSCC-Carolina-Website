@@ -40,13 +40,13 @@ const MobileHandler = {
         // SAFEGUARD: Don't run on desktop at all
         const isDesktop = window.innerWidth > 1024 || (window.innerWidth > 768 && !('ontouchstart' in window));
         if (isDesktop) {
-            console.log('%c💻 Desktop detected - mobile handler disabled', 'color: #7ec8e3;');
+            console.log('%cðŸ’» Desktop detected - mobile handler disabled', 'color: #7ec8e3;');
             return;
         }
         
         this.initialized = true;
         
-        console.log('%c📱 Mobile handler initialized', 'color: #7ec8e3;');
+        console.log('%cðŸ“± Mobile handler initialized', 'color: #7ec8e3;');
         
         // Check initial state
         this.checkMobile();
@@ -77,7 +77,7 @@ const MobileHandler = {
     
     // Enable mobile portrait mode
     enableMobileMode: function() {
-        console.log('%c📱 Mobile portrait mode activated', 'color: #7ec8e3; font-weight: bold;');
+        console.log('%cðŸ“± Mobile portrait mode activated', 'color: #7ec8e3; font-weight: bold;');
         
         // Add mobile class to body
         document.body.classList.add('mobile-portrait');
@@ -112,7 +112,7 @@ const MobileHandler = {
     
     // Disable mobile portrait mode
     disableMobileMode: function() {
-        console.log('%c🖥️ Desktop/landscape mode activated', 'color: #7ec8e3; font-weight: bold;');
+        console.log('%cðŸ–¥ï¸ Desktop/landscape mode activated', 'color: #7ec8e3; font-weight: bold;');
         
         // Remove mobile class
         document.body.classList.remove('mobile-portrait');
@@ -139,14 +139,41 @@ const MobileHandler = {
         }
     },
     
-    // Setup collapsible panel functionality for mobile
+    // Setup panel click functionality for mobile - use desktop expandPanel
     setupCollapsiblePanels: function() {
         const panels = document.querySelectorAll('.nav-panel');
         
         panels.forEach((panel) => {
             // Store panel's bound handler
             if (!panel._mobileClickHandler) {
-                panel._mobileClickHandler = this.handlePanelClick.bind(panel);
+                panel._mobileClickHandler = (e) => {
+                    // Prevent double-firing on touch devices
+                    if (e.type === 'touchend') {
+                        e.preventDefault();
+                    }
+                    if (e.type === 'click' && e.detail === 0) {
+                        return;
+                    }
+                    
+                    // Prevent event from bubbling to drag handlers
+                    e.stopPropagation();
+                    
+                    // Don't expand if already in full-screen expansion mode
+                    if (window.isExpanded || window.isCollapsing) return;
+                    
+                    // Use desktop expandPanel function for consistency
+                    const contentType = panel.dataset.contentType;
+                    if (contentType) {
+                        // Preload images for leadership panel
+                        if (contentType === 'leadership' && window.imagePreloader) {
+                            window.imagePreloader.preload();
+                        }
+                        // Use existing desktop expandPanel function
+                        if (typeof expandPanel === 'function') {
+                            expandPanel(panel.id, contentType);
+                        }
+                    }
+                };
             }
             
             // Remove existing listeners to prevent duplicates
@@ -179,7 +206,7 @@ const MobileHandler = {
         });
     },
     
-    // Remove collapsible panel functionality
+    // Remove mobile panel event listeners
     removeCollapsiblePanels: function() {
         const panels = document.querySelectorAll('.nav-panel');
         
@@ -193,90 +220,10 @@ const MobileHandler = {
             }
             panel.removeEventListener('touchstart', this.preventDrag);
             panel.removeEventListener('touchmove', this.preventDrag);
-            panel.classList.remove('mobile-expanded');
             panel.removeAttribute('role');
             panel.removeAttribute('aria-expanded');
             panel.removeAttribute('tabindex');
         });
-    },
-    
-    // Handle panel click for mobile collapse/expand
-    handlePanelClick: function(e) {
-        // Prevent double-firing on touch devices
-        if (e.type === 'touchend') {
-            e.preventDefault();
-        }
-        if (e.type === 'click' && e.detail === 0) {
-            // This is a programmatic click from touchend, ignore
-            return;
-        }
-        
-        // Only handle in portrait mode
-        if (!MobileHandler.isPortrait) return;
-        
-        // Prevent event from bubbling to drag handlers
-        e.stopPropagation();
-        
-        const panel = this;
-        const isExpanded = panel.classList.contains('mobile-expanded');
-        
-        // Don't expand if already in full-screen expansion mode
-        if (window.isExpanded || window.isCollapsing) return;
-        
-        // Get content type for potential full expansion
-        const contentType = panel.dataset.contentType;
-        
-        // Check if this is a long press or double-tap for fullscreen
-        const now = Date.now();
-        if (!panel._lastTap) panel._lastTap = 0;
-        const isDoubleTap = (now - panel._lastTap) < 500;
-        panel._lastTap = now;
-        
-        if (isDoubleTap) {
-            // Full screen expansion (existing functionality)
-            if (contentType && !window.isExpanded && !window.isCollapsing) {
-                // Preload images for leadership panel
-                if (contentType === 'leadership' && window.imagePreloader) {
-                    window.imagePreloader.preload();
-                }
-                // Use existing expandPanel function
-                if (typeof expandPanel === 'function') {
-                    // First collapse the mobile expansion
-                    panel.classList.remove('mobile-expanded');
-                    panel.setAttribute('aria-expanded', 'false');
-                    // Then expand to fullscreen
-                    setTimeout(() => {
-                        expandPanel(panel.id, contentType);
-                    }, 300);
-                }
-            }
-        } else {
-            // Simple mobile expand/collapse
-            if (isExpanded) {
-                panel.classList.remove('mobile-expanded');
-                panel.setAttribute('aria-expanded', 'false');
-            } else {
-                // Accordion behavior: close other panels
-                document.querySelectorAll('.nav-panel.mobile-expanded').forEach(otherPanel => {
-                    if (otherPanel !== panel) {
-                        otherPanel.classList.remove('mobile-expanded');
-                        otherPanel.setAttribute('aria-expanded', 'false');
-                    }
-                });
-                
-                // Expand this panel
-                panel.classList.add('mobile-expanded');
-                panel.setAttribute('aria-expanded', 'true');
-                
-                // Scroll panel into view smoothly
-                setTimeout(() => {
-                    panel.scrollIntoView({ 
-                        behavior: 'smooth', 
-                        block: 'nearest' 
-                    });
-                }, 100);
-            }
-        }
     },
     
     // Prevent drag events on mobile
@@ -303,4 +250,4 @@ if (document.readyState === 'loading') {
 // Export for use in other scripts
 window.MobileHandler = MobileHandler;
 
-console.log('%c✨ Mobile handler loaded', 'color: #a8d5e8; font-size: 12px;');
+console.log('%câœ¨ Mobile handler loaded', 'color: #a8d5e8; font-size: 12px;');
