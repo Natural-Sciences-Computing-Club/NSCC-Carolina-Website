@@ -480,11 +480,21 @@ class GoldenPanelPhysics {
             const panelData = this.panels.get(panel.id);
             if (!panelData) return;
             
-            // Visual feedback that mousedown fired
-            panel.style.boxShadow = '0 0 50px rgba(126,200,227,0.8)';
-            setTimeout(() => {
-                panel.style.boxShadow = '';
-            }, 200);
+            // Visual feedback that mousedown fired - apply to glass container for better effect
+            const glassContainer = panel.querySelector('.panel-glass-container');
+            if (glassContainer) {
+                glassContainer.style.boxShadow = `
+                    inset 0 2px 4px rgba(255,255,255,0.5),
+                    inset 0 -2px 4px rgba(0,0,0,0.2),
+                    0 0 0 1px rgba(126,200,227,0.8),
+                    0 0 50px rgba(126,200,227,0.6),
+                    0 10px 40px rgba(0,0,0,0.3),
+                    0 2px 10px rgba(0,0,0,0.2)
+                `;
+                setTimeout(() => {
+                    glassContainer.style.boxShadow = '';
+                }, 200);
+            }
             
             // Debug logging
             console.log(`[${panel.id}] mousedown fired, isDragging was: ${panelData.isDragging}, isExpanded: ${isExpanded}, isCollapsing: ${isCollapsing}`);

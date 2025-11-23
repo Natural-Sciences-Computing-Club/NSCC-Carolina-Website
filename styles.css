@@ -5,6 +5,26 @@
     padding: 0;
     box-sizing: border-box;
     cursor: none;
+    /* Prevent text selection highlighting */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    /* Prevent tap highlight on mobile */
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Allow text selection only where needed */
+.panel-description,
+.leader-description,
+.expanded-content p,
+.expanded-content h1,
+.expanded-content h2,
+.expanded-content h3 {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
 }
 
 :root {
@@ -752,6 +772,24 @@ body[data-theme="dark"] .chrome-title {
     pointer-events: auto;
     z-index: 1000;
     will-change: transform;
+    /* Fix for background corners sticking out */
+    background: transparent;
+    border-radius: 20px;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Remove any focus outlines */
+.nav-panel:focus,
+.nav-panel:active,
+.nav-panel:focus-visible {
+    outline: none;
+    background: transparent;
 }
 
 /* Ensure panels don't overlap with title/subtitle area */
@@ -765,6 +803,9 @@ body[data-theme="dark"] .chrome-title {
 .nav-panel.dragging {
     z-index: 2000;
     filter: brightness(1.2);
+    /* Ensure no background appears when dragging */
+    background: transparent;
+    outline: none;
 }
 
 /* Y2K Aero Glass Panel Container */
@@ -774,6 +815,9 @@ body[data-theme="dark"] .chrome-title {
     height: 100%;
     border-radius: 20px;
     overflow: hidden;
+    /* Ensure nothing escapes the rounded corners */
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
+    mask-image: radial-gradient(white, black);
     /* Add base glass background to ensure full coverage */
     background: linear-gradient(180deg,
         var(--panel-glass-gradient-1) 0%,
@@ -789,6 +833,8 @@ body[data-theme="dark"] .chrome-title {
         0 0 0 1px rgba(255,255,255,0.5),
         0 10px 40px var(--shadow-primary),
         0 2px 10px var(--shadow-secondary);
+    /* Smooth transition for box-shadow changes */
+    transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 body[data-theme="dark"] .panel-glass-container {
@@ -1479,6 +1525,13 @@ body[data-theme="dark"] .expanded-content::-webkit-scrollbar-thumb:hover {
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
+}
+
+/* Ensure nav-panels have no background artifacts when hidden */
+.nav-panel.fade-element.hidden {
+    background: transparent !important;
+    box-shadow: none !important;
+    outline: none !important;
 }
 
 /* Leadership Content Styling */
