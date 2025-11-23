@@ -2,7 +2,6 @@
 const PHI = 1.618033988749;
 const PHI_INV = 0.618033988749;
 const FIBONACCI = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144];
-
 // ============================================
 // DARK MODE THEME SYSTEM
 // ============================================
@@ -100,7 +99,7 @@ const ThemeManager = {
         }
         
         // Log final theme initialization
-        console.log(`%c✨ Theme initialized: ${initialTheme} mode`, 
+        console.log(`%câœ¨ Theme initialized: ${initialTheme} mode`, 
             `color: ${initialTheme === 'dark' ? '#9482ff' : '#7ec8e3'}; font-weight: bold; font-size: 14px;`);
     },
     
@@ -153,7 +152,7 @@ const ThemeManager = {
         this.setTheme(newTheme, true, true);
         
         // Log theme change with styled console message
-        console.log(`%c🔄 Theme manually switched to: ${newTheme} mode`, 
+        console.log(`%cðŸ”„ Theme manually switched to: ${newTheme} mode`, 
             `color: ${newTheme === 'dark' ? '#9482ff' : '#7ec8e3'}; font-weight: bold;`);
     },
     
@@ -167,7 +166,7 @@ const ThemeManager = {
         localStorage.removeItem('nscc-theme');
         localStorage.removeItem('nscc-theme-manually-set');
         localStorage.removeItem('nscc-has-visited');
-        console.log('%c🗑️ Theme preferences cleared', 'color: #ff6b6b;');
+        console.log('%cðŸ—‘ï¸ Theme preferences cleared', 'color: #ff6b6b;');
     }
 };
 
@@ -1528,7 +1527,7 @@ function getLeadershipContent() {
                 <div class="leader-role">Co-President</div>
                 <div class="leader-name">William Keffer</div>
                 <div class="leader-description">
-                    William Keffer is a UNC-Chapel Hill student and the driving force behind the Natural Sciences Computing Club (NSCC), where he bridges natural sciences with modern computing through hands-on workshops, project sprints, and mentorship. He focuses on practical Python and Jupyter workflows, data visualization, and approachable machine learningÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Âhelping members turn curiosity into portfolio-ready projects that mix biology, physics, and earth science with code. With a sharp eye for design and user experience, William also shapes NSCC's brand and web presence, championing creative, high-quality visuals alongside clean, reproducible pipelines. Above all, he's building an inclusive, collaborative community that celebrates both scientific rigor and inventive, real-world problem-solving.
+                    William Keffer is a UNC-Chapel Hill student and the driving force behind the Natural Sciences Computing Club (NSCC), where he bridges natural sciences with modern computing through hands-on workshops, project sprints, and mentorship. He focuses on practical Python and Jupyter workflows, data visualization, and approachable machine learningÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Âhelping members turn curiosity into portfolio-ready projects that mix biology, physics, and earth science with code. With a sharp eye for design and user experience, William also shapes NSCC's brand and web presence, championing creative, high-quality visuals alongside clean, reproducible pipelines. Above all, he's building an inclusive, collaborative community that celebrates both scientific rigor and inventive, real-world problem-solving.
                 </div>
             </div>
         </div>
@@ -1538,7 +1537,7 @@ function getLeadershipContent() {
                 <div class="leader-role">Co-President</div>
                 <div class="leader-name">Osman Taka</div>
                 <div class="leader-description">
-                    Osman Taka is a Computer Science and Physics double major at UNC Chapel Hill with a passion for using computational tools to tackle challenges in the natural sciences. He's drawn to projects that merge programming with scientific researchÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Âwhether that's modeling complex systems or developing tools that make discovery more accessible. With experience leading robotics, math, and engineering initiatives, Osman values collaboration and creative problem-solving. Through the Natural Sciences Computing Club, he hopes to build a community where students from different disciplines can explore the intersection of computation and science, and work together on projects that make a real impact.
+                    Osman Taka is a Computer Science and Physics double major at UNC Chapel Hill with a passion for using computational tools to tackle challenges in the natural sciences. He's drawn to projects that merge programming with scientific researchÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Âwhether that's modeling complex systems or developing tools that make discovery more accessible. With experience leading robotics, math, and engineering initiatives, Osman values collaboration and creative problem-solving. Through the Natural Sciences Computing Club, he hopes to build a community where students from different disciplines can explore the intersection of computation and science, and work together on projects that make a real impact.
                 </div>
             </div>
             <div class="leader-image leader-image-right">
@@ -1672,10 +1671,10 @@ if (document.readyState === 'loading') {
     checkThreeJS();
 }
 
-console.log('%cÃƒÂ¢Ã…â€œÃ‚Â¦ GOLDEN RATIO CYBERCORE INITIALIZED', 
+console.log('%cÃƒÆ’Ã‚Â¢Ãƒâ€¦Ã¢â‚¬Å“Ãƒâ€šÃ‚Â¦ GOLDEN RATIO CYBERCORE INITIALIZED', 
     'color: #7ec8e3; font-size: 24px; font-weight: 100; text-shadow: 0 0 20px rgba(126,200,227,0.8);');
-console.log(`%cÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ ÃƒÂÃ¢â‚¬Â  = ${PHI.toFixed(3)}`, 'color: #a8d5e8; font-size: 12px;');
-console.log(`%cÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Fibonacci: ${FIBONACCI.slice(0, 8).join(', ')}...`, 'color: #a8d5e8; font-size: 12px;');
+console.log(`%cÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ ÃƒÆ’Ã‚ÂÃƒÂ¢Ã¢â€šÂ¬Ã‚Â  = ${PHI.toFixed(3)}`, 'color: #a8d5e8; font-size: 12px;');
+console.log(`%cÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ Fibonacci: ${FIBONACCI.slice(0, 8).join(', ')}...`, 'color: #a8d5e8; font-size: 12px;');
 
 // Console helpers for theme debugging
 window.themeDebug = {

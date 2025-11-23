@@ -2134,3 +2134,231 @@ body[data-theme="dark"] .moon-stars {
 .theme-toggle * {
     cursor: pointer !important;
 }
+
+
+/* ============================================
+   MOBILE PORTRAIT MODE STYLES
+   ============================================ */
+
+/* Mobile Portrait Detection - ONLY for touch devices */
+@media screen and (orientation: portrait) and (max-width: 768px) and (hover: none) and (pointer: coarse) {
+    /* Reset body for mobile */
+    body {
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        height: auto !important;
+        min-height: 100vh;
+        cursor: auto !important;
+    }
+    
+    /* Allow cursor on mobile */
+    * {
+        cursor: auto !important;
+    }
+    
+    /* Hide desktop-only elements */
+    .chrome-cursor,
+    .deformation-ripple,
+    .design-grid,
+    .neural-network,
+    .data-stream,
+    .shape-cluster,
+    .dna-helix,
+    #three-canvas {
+        display: none !important;
+    }
+    
+    /* Simplify background for performance */
+    .chrome-grid {
+        display: none;
+    }
+    
+    .organic-nebula {
+        position: fixed;
+        pointer-events: none;
+    }
+    
+    /* Adjust nebula blobs for mobile */
+    .nebula-blob {
+        filter: blur(50px);
+        opacity: 0.3;
+    }
+    
+    /* Mobile Container Structure */
+    .cyberspace {
+        position: relative !important;
+        width: 100%;
+        height: auto;
+        transform: none !important;
+        animation: none !important;
+        pointer-events: auto !important;
+        padding: 20px 16px 100px 16px;
+        z-index: 10;
+    }
+    
+    /* Mobile Title Styling */
+    .chrome-title {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        transform: none !important;
+        font-size: clamp(40px, 12vw, 60px) !important;
+        letter-spacing: clamp(5px, 2vw, 10px) !important;
+        margin-bottom: 10px;
+        margin-top: 20px;
+        z-index: 20;
+    }
+    
+    .subtitle {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        font-size: 11px !important;
+        letter-spacing: 3px !important;
+        margin-bottom: 30px;
+        opacity: 0.9;
+        z-index: 20;
+    }
+    
+    /* Reset panel positioning for mobile */
+    .nav-panel {
+        position: relative !important;
+        width: 100% !important;
+        min-width: unset !important;
+        height: auto !important;
+        min-height: unset !important;
+        transform: none !important;
+        left: auto !important;
+        top: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        margin: 0 !important;
+        cursor: pointer !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        z-index: 30;
+    }
+    
+    /* Mobile Panel Content - Collapsed State */
+    .nav-panel .panel-content {
+        padding: 16px !important;
+        padding-bottom: 16px !important;
+        height: auto !important;
+        min-height: 60px;
+        max-height: 60px;
+        overflow: hidden;
+        transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    /* Expanded Panel State */
+    .nav-panel.mobile-expanded .panel-content {
+        max-height: 400px;
+        padding-bottom: 50px !important;
+    }
+    
+    /* Mobile Collapse Indicator */
+    .nav-panel::after {
+        content: '▼';
+        position: absolute;
+        right: 20px;
+        top: 20px;
+        font-size: 12px;
+        color: var(--accent-cyan);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        pointer-events: none;
+        z-index: 10;
+    }
+    
+    .nav-panel.mobile-expanded::after {
+        transform: rotate(180deg);
+    }
+    
+    /* Panel styling adjustments */
+    .panel-icon {
+        width: 30px !important;
+        height: 30px !important;
+        margin-bottom: 0 !important;
+        position: absolute;
+        left: 16px;
+        top: 15px;
+        animation: none !important;
+    }
+    
+    .panel-title {
+        font-size: 18px !important;
+        margin-left: 50px;
+        margin-bottom: 5px !important;
+        margin-top: 2px;
+    }
+    
+    /* Hide elements in collapsed state */
+    .nav-panel:not(.mobile-expanded) .panel-description,
+    .nav-panel:not(.mobile-expanded) .panel-data {
+        opacity: 0;
+        visibility: hidden;
+    }
+    
+    /* Show elements in expanded state */
+    .nav-panel.mobile-expanded .panel-description {
+        opacity: 0.9;
+        visibility: visible;
+        margin-left: 0;
+        margin-top: 15px;
+        transition: opacity 0.3s 0.1s;
+        max-height: none;
+    }
+    
+    .nav-panel.mobile-expanded .panel-data {
+        opacity: 0.9;
+        visibility: visible;
+        transition: opacity 0.3s 0.15s;
+        position: absolute;
+        bottom: 15px;
+    }
+}
+
+/* Tablet Portrait */
+@media screen and (orientation: portrait) and (min-width: 769px) and (max-width: 1024px) {
+    .nav-panel {
+        max-width: 600px;
+        margin: 0 auto !important;
+    }
+}
+
+/* Fallback for older mobile browsers that don't support hover/pointer media queries */
+@media screen and (orientation: portrait) and (max-width: 768px) {
+    /* Only apply if body has mobile-portrait class (set by JavaScript) */
+    body.mobile-portrait {
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        height: auto !important;
+        min-height: 100vh;
+    }
+    
+    body.mobile-portrait * {
+        cursor: auto !important;
+    }
+    
+    /* Apply all mobile styles only when JS confirms it's mobile */
+    body.mobile-portrait .chrome-cursor,
+    body.mobile-portrait .deformation-ripple,
+    body.mobile-portrait .design-grid,
+    body.mobile-portrait .neural-network,
+    body.mobile-portrait .data-stream,
+    body.mobile-portrait .shape-cluster,
+    body.mobile-portrait .dna-helix,
+    body.mobile-portrait #three-canvas {
+        display: none !important;
+    }
+    
+    body.mobile-portrait .nav-panel {
+        position: relative !important;
+        width: 100% !important;
+        min-width: unset !important;
+        height: auto !important;
+        transform: none !important;
+        left: auto !important;
+        top: auto !important;
+    }
+}
