@@ -40,13 +40,13 @@ const MobileHandler = {
         // SAFEGUARD: Don't run on desktop at all
         const isDesktop = window.innerWidth > 1024 || (window.innerWidth > 768 && !('ontouchstart' in window));
         if (isDesktop) {
-            console.log('%c💻 Desktop detected - mobile handler disabled', 'color: #7ec8e3;');
+            console.log('%cðŸ’» Desktop detected - mobile handler disabled', 'color: #7ec8e3;');
             return;
         }
         
         this.initialized = true;
         
-        console.log('%c📱 Mobile handler initialized', 'color: #7ec8e3;');
+        console.log('%cðŸ“± Mobile handler initialized', 'color: #7ec8e3;');
         
         // Check initial state
         this.checkMobile();
@@ -77,7 +77,7 @@ const MobileHandler = {
     
     // Enable mobile portrait mode
     enableMobileMode: function() {
-        console.log('%c📱 Mobile portrait mode activated', 'color: #7ec8e3; font-weight: bold;');
+        console.log('%cðŸ“± Mobile portrait mode activated', 'color: #7ec8e3; font-weight: bold;');
         
         // Add mobile class to body
         document.body.classList.add('mobile-portrait');
@@ -112,7 +112,7 @@ const MobileHandler = {
     
     // Disable mobile portrait mode
     disableMobileMode: function() {
-        console.log('%cÃ°Å¸â€“Â¥Ã¯Â¸Â Desktop/landscape mode activated', 'color: #7ec8e3; font-weight: bold;');
+        console.log('%cÃƒÂ°Ã…Â¸Ã¢â‚¬â€œÃ‚Â¥ÃƒÂ¯Ã‚Â¸Ã‚Â Desktop/landscape mode activated', 'color: #7ec8e3; font-weight: bold;');
         
         // Remove mobile class
         document.body.classList.remove('mobile-portrait');
@@ -315,4 +315,4 @@ if (document.readyState === 'loading') {
 // Export for use in other scripts
 window.MobileHandler = MobileHandler;
 
-console.log('%cÃ¢Å“Â¨ Mobile handler loaded', 'color: #a8d5e8; font-size: 12px;');
+console.log('%cÃƒÂ¢Ã…â€œÃ‚Â¨ Mobile handler loaded', 'color: #a8d5e8; font-size: 12px;');

@@ -99,7 +99,7 @@ const ThemeManager = {
         }
         
         // Log final theme initialization
-        console.log(`%c✨ Theme initialized: ${initialTheme} mode`,
+        console.log(`%câœ¨ Theme initialized: ${initialTheme} mode`,
             `color: ${initialTheme === 'dark' ? '#9482ff' : '#7ec8e3'}; font-weight: bold; font-size: 14px;`);
     },
     
@@ -152,7 +152,7 @@ const ThemeManager = {
         this.setTheme(newTheme, true, true);
         
         // Log theme change with styled console message
-        console.log(`%c🌞 Theme manually switched to: ${newTheme} mode`,
+        console.log(`%cðŸŒž Theme manually switched to: ${newTheme} mode`,
             `color: ${newTheme === 'dark' ? '#9482ff' : '#7ec8e3'}; font-weight: bold;`);
     },
     
@@ -166,7 +166,7 @@ const ThemeManager = {
         localStorage.removeItem('nscc-theme');
         localStorage.removeItem('nscc-theme-manually-set');
         localStorage.removeItem('nscc-has-visited');
-        console.log('%c🗑️ Theme preferences cleared', 'color: #ff6b6b;');
+        console.log('%cðŸ—‘ï¸ Theme preferences cleared', 'color: #ff6b6b;');
     }
 };
 
@@ -488,7 +488,7 @@ class GoldenPanelPhysics {
             element.classList.add('ready');
         });
         
-        console.log('%c✓ Elements positioned and revealed', 
+        console.log('%câœ“ Elements positioned and revealed', 
             'color: #7ec8e3; font-weight: bold;');
     }
     
@@ -905,7 +905,7 @@ function init() {
         setTimeout(() => {
             const stillHidden = document.querySelectorAll('.js-positioned:not(.ready)');
             if (stillHidden.length > 0) {
-                console.warn('⚠ Failsafe timeout: Force revealing ' + stillHidden.length + ' elements');
+                console.warn('âš  Failsafe timeout: Force revealing ' + stillHidden.length + ' elements');
                 stillHidden.forEach(el => el.classList.add('ready'));
             }
         }, 2000); // Maximum 2 second wait
@@ -1528,14 +1528,14 @@ function loadContent(contentType, container) {
         case 'leadership':
             container.innerHTML = getLeadershipContent();
             break;
-        case 'research':
-            container.innerHTML = getResearchContent();
+        case 'projects':
+            container.innerHTML = getProjectsContent();
             break;
-        case 'workshops':
-            container.innerHTML = getWorkshopsContent();
+        case 'events':
+            container.innerHTML = getEventsContent();
             break;
-        case 'community':
-            container.innerHTML = getCommunityContent();
+        case 'about':
+            container.innerHTML = getAboutContent();
             break;
         case 'join':
             container.innerHTML = getJoinContent();
@@ -1551,13 +1551,13 @@ function getLeadershipContent() {
         
         <div class="leader-section">
             <div class="leader-image leader-image-left">
-                <span><img loading="lazy" src="wk.jpg" alt="William Keffer"></span>
+                <span><img src="./wk.jpg" alt="William Keffer"></span>
             </div>
             <div class="leader-info leader-info-left">
                 <div class="leader-role">Co-President</div>
                 <div class="leader-name">William Keffer</div>
                 <div class="leader-description">
-                    William Keffer is a UNC-Chapel Hill student and the driving force behind the Natural Sciences Computing Club (NSCC), where he bridges natural sciences with modern computing through hands-on workshops, project sprints, and mentorship. He focuses on practical Python and Jupyter workflows, data visualization, and approachable machine learning—helping members turn curiosity into portfolio-ready projects that mix biology, physics, and earth science with code. With a sharp eye for design and user experience, William also shapes NSCC's brand and web presence, championing creative, high-quality visuals alongside clean, reproducible pipelines. Above all, he's building an inclusive, collaborative community that celebrates both scientific rigor and inventive, real-world problem-solving.
+                    William Keffer is a UNC-Chapel Hill student and the driving force behind the Natural Sciences Computing Club (NSCC), where he bridges natural sciences with modern computing through hands-on workshops, project sprints, and mentorship. He focuses on practical Python and Jupyter workflows, data visualization, and approachable machine learningâ€”Âhelping members turn curiosity into portfolio-ready projects that mix biology, physics, and earth science with code. With a sharp eye for design and user experience, William also shapes NSCC's brand and web presence, championing creative, high-quality visuals alongside clean, reproducible pipelines. Above all, he's building an inclusive, collaborative community that celebrates both scientific rigor and inventive, real-world problem-solving.
                 </div>
             </div>
         </div>
@@ -1567,17 +1567,17 @@ function getLeadershipContent() {
                 <div class="leader-role">Co-President</div>
                 <div class="leader-name">Osman Taka</div>
                 <div class="leader-description">
-                    Osman Taka is a Computer Science and Physics double major at UNC Chapel Hill with a passion for using computational tools to tackle challenges in the natural sciences. He's drawn to projects that merge programming with scientific research—whether that's modeling complex systems or developing tools that make discovery more accessible. With experience leading robotics, math, and engineering initiatives, Osman values collaboration and creative problem-solving. Through the Natural Sciences Computing Club, he hopes to build a community where students from different disciplines can explore the intersection of computation and science, and work together on projects that make a real impact.
+                    Osman Taka is a Computer Science and Physics double major at UNC Chapel Hill with a passion for using computational tools to tackle challenges in the natural sciences. He's drawn to projects that merge programming with scientific researchâ€”Âwhether that's modeling complex systems or developing tools that make discovery more accessible. With experience leading robotics, math, and engineering initiatives, Osman values collaboration and creative problem-solving. Through the Natural Sciences Computing Club, he hopes to build a community where students from different disciplines can explore the intersection of computation and science, and work together on projects that make a real impact.
                 </div>
             </div>
             <div class="leader-image leader-image-right">
-                <span><img loading="lazy" src="ot.jpg" alt="Osman Taka"></span>
+                <span><img src="./ot.jpg" alt="Osman Taka"></span>
             </div>
         </div>
         
         <div class="leader-section">
             <div class="leader-image leader-image-left">
-                <span><img loading="lazy" src="JC_photo.jpg" alt="John Christopher"></span>
+                <span><img src="./JC_photo.jpg" alt="John Christopher"></span>
             </div>
             <div class="leader-info leader-info-left">
                 <div class="leader-role">Treasurer</div>
@@ -1594,38 +1594,173 @@ function getLeadershipContent() {
     `;
 }
 
-function getResearchContent() {
+function getProjectsContent() {
     return `
-        <h1 class="expanded-title">Research Projects</h1>
-        <p style="text-align: center; margin-bottom: 40px; color: var(--text-light);">
-            Cutting-edge computational research across natural sciences
-        </p>
-        <div class="bottom-link">
-            <a href="#" onclick="return false;">Join a Research Team</a>
+        <h1 class="expanded-title">Projects</h1>
+        <div style="text-align: center; padding: 60px 20px; color: var(--text-light); font-size: 18px; font-weight: 300; letter-spacing: 1px;">
+            Coming soon
         </div>
     `;
 }
 
-function getWorkshopsContent() {
+function getEventsContent() {
     return `
-        <h1 class="expanded-title">Workshops & Training</h1>
-        <p style="text-align: center; margin-bottom: 40px; color: var(--text-light);">
-            Weekly sessions on computational tools and techniques
-        </p>
-        <div class="bottom-link">
-            <a href="#" onclick="return false;">View Schedule</a>
+        <h1 class="expanded-title">Event Schedule</h1>
+        
+        <div class="calendar-container" style="
+            max-width: 1000px;
+            margin: 40px auto;
+            background: linear-gradient(135deg,
+                var(--glass-white),
+                var(--glass-blue));
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 
+                inset 0 2px 4px var(--glass-shadow-light),
+                inset 0 -2px 4px var(--glass-shadow-dark),
+                0 10px 40px var(--shadow-primary);
+        ">
+            <div class="calendar-header" style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 30px;
+                padding-bottom: 20px;
+                border-bottom: 1px solid var(--glass-border);
+            ">
+                <button class="calendar-nav" style="
+                    background: linear-gradient(135deg,
+                        var(--panel-glass-gradient-1),
+                        var(--panel-glass-gradient-2));
+                    border: 1px solid var(--glass-border);
+                    color: var(--text-dark);
+                    padding: 10px 20px;
+                    border-radius: 10px;
+                    cursor: pointer;
+                    font-size: 14px;
+                    transition: all 0.3s;
+                ">← Previous</button>
+                
+                <h2 style="
+                    font-size: 24px;
+                    font-weight: 300;
+                    color: var(--text-dark);
+                    letter-spacing: 2px;
+                ">November 2025</h2>
+                
+                <button class="calendar-nav" style="
+                    background: linear-gradient(135deg,
+                        var(--panel-glass-gradient-1),
+                        var(--panel-glass-gradient-2));
+                    border: 1px solid var(--glass-border);
+                    color: var(--text-dark);
+                    padding: 10px 20px;
+                    border-radius: 10px;
+                    cursor: pointer;
+                    font-size: 14px;
+                    transition: all 0.3s;
+                ">Next →</button>
+            </div>
+            
+            <div class="calendar-grid" style="
+                display: grid;
+                grid-template-columns: repeat(7, 1fr);
+                gap: 10px;
+            ">
+                <div style="text-align: center; font-weight: 300; color: var(--text-light); padding: 15px 0; font-size: 12px; letter-spacing: 1px;">SUN</div>
+                <div style="text-align: center; font-weight: 300; color: var(--text-light); padding: 15px 0; font-size: 12px; letter-spacing: 1px;">MON</div>
+                <div style="text-align: center; font-weight: 300; color: var(--text-light); padding: 15px 0; font-size: 12px; letter-spacing: 1px;">TUE</div>
+                <div style="text-align: center; font-weight: 300; color: var(--text-light); padding: 15px 0; font-size: 12px; letter-spacing: 1px;">WED</div>
+                <div style="text-align: center; font-weight: 300; color: var(--text-light); padding: 15px 0; font-size: 12px; letter-spacing: 1px;">THU</div>
+                <div style="text-align: center; font-weight: 300; color: var(--text-light); padding: 15px 0; font-size: 12px; letter-spacing: 1px;">FRI</div>
+                <div style="text-align: center; font-weight: 300; color: var(--text-light); padding: 15px 0; font-size: 12px; letter-spacing: 1px;">SAT</div>
+                
+                ${Array(35).fill(0).map((_, i) => {
+                    const day = i + 1;
+                    const isCurrentDay = day === 23;
+                    return `
+                        <div class="calendar-day" style="
+                            aspect-ratio: 1;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            background: ${isCurrentDay ? 'linear-gradient(135deg, rgba(126,200,227,0.3), rgba(126,200,227,0.2))' : 'rgba(255,255,255,0.05)'};
+                            border: 1px solid ${isCurrentDay ? 'var(--accent-cyan)' : 'var(--glass-border)'};
+                            border-radius: 10px;
+                            color: var(--text-dark);
+                            font-size: 14px;
+                            cursor: pointer;
+                            transition: all 0.3s;
+                            backdrop-filter: blur(10px);
+                        " onmouseover="this.style.background='linear-gradient(135deg, rgba(126,200,227,0.2), rgba(126,200,227,0.1))'; this.style.transform='scale(1.05)';" 
+                           onmouseout="this.style.background='${isCurrentDay ? 'linear-gradient(135deg, rgba(126,200,227,0.3), rgba(126,200,227,0.2))' : 'rgba(255,255,255,0.05)'}'; this.style.transform='scale(1)';">
+                            ${day <= 30 ? day : ''}
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+            
+            <div style="
+                text-align: center;
+                margin-top: 30px;
+                padding-top: 20px;
+                border-top: 1px solid var(--glass-border);
+                color: var(--text-light);
+                font-size: 13px;
+                font-style: italic;
+            ">
+                Events will be added as they are scheduled
+            </div>
         </div>
     `;
 }
 
-function getCommunityContent() {
+function getAboutContent() {
     return `
-        <h1 class="expanded-title">Our Community</h1>
-        <p style="text-align: center; margin-bottom: 40px; color: var(--text-light);">
-            Connect with students passionate about computational science
-        </p>
-        <div class="bottom-link">
-            <a href="#" onclick="return false;">Join Discord</a>
+        <h1 class="expanded-title">About Us</h1>
+        
+        <div class="team-photo-placeholder" style="
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto 50px auto;
+            aspect-ratio: 16/9;
+            background: linear-gradient(135deg,
+                rgba(126,200,227,0.2),
+                rgba(168,213,232,0.15));
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            font-size: 14px;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+        ">
+            [Team Photo - All Members or Executives]
+        </div>
+        
+        <div style="
+            max-width: 900px;
+            margin: 0 auto;
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--text-light);
+            text-align: justify;
+        ">
+            <p>
+                NSCC addresses a critical gap in scientific education: the growing need for 
+                computational literacy in natural sciences research. While traditional science curricula 
+                provide strong disciplinary foundations, they often leave students unprepared for the 
+                data analysis, modeling, and programming skills that define modern research. We 
+                bridge this divide by combining computational training with scientific problem-solving in 
+                an accessible, peer-led environment. We envision a community where biology, 
+                chemistry, physics, and environmental science students confidently apply code to 
+                advance their fields. By fostering both technical competency and collaborative 
+                innovation, NSCC cultivates the next generation of computationally fluent scientists 
+                ready to tackle complex challenges at the intersection of data and discovery.
+            </p>
         </div>
     `;
 }
@@ -1633,9 +1768,39 @@ function getCommunityContent() {
 function getJoinContent() {
     return `
         <h1 class="expanded-title">Join NSCC</h1>
-        <p style="text-align: center; margin-bottom: 40px; color: var(--text-light);">
-            Open to all UNC students - no experience required!
-        </p>
+        
+        <div style="
+            max-width: 900px;
+            margin: 0 auto;
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--text-light);
+            text-align: justify;
+        ">
+            <p>
+                NSCC addresses a critical gap in scientific education: the growing need for 
+                computational literacy in natural sciences research. While traditional science curricula 
+                provide strong disciplinary foundations, they often leave students unprepared for the 
+                data analysis, modeling, and programming skills that define modern research. Whether 
+                you're analyzing genomic sequences, processing climate data, or building simulations of 
+                chemical reactions, computational skills have become essential to scientific discovery.
+            </p>
+            <p style="margin-top: 20px;">
+                We bridge this divide by combining computational training with scientific 
+                problem-solving in an accessible, peer-led environment where students can learn 
+                practical programming skills alongside their peers who understand the unique 
+                challenges of applying code to scientific questions. We envision a community where 
+                biology, chemistry, physics, and environmental science students confidently apply code 
+                to advance their fields, not as computer scientists, but as scientists who happen to use 
+                computation as a powerful tool for discovery. By fostering both technical competency 
+                and collaborative innovation through workshops, projects, and peer mentorship, NSCC 
+                cultivates the next generation of computationally fluent scientists ready to tackle 
+                complex challenges at the intersection of data and discovery. Join us to develop the 
+                skills that will define your research career and connect with fellow students who are just 
+                as excited about using code to unlock new scientific insights.
+            </p>
+        </div>
+        
         <div class="bottom-link">
             <a href="#" onclick="return false;">Apply Now</a>
         </div>
@@ -1701,10 +1866,10 @@ if (document.readyState === 'loading') {
     checkThreeJS();
 }
 
-console.log('%c✦ GOLDEN RATIO CYBERCORE INITIALIZED',
+console.log('%câœ¦ GOLDEN RATIO CYBERCORE INITIALIZED',
     'color: #7ec8e3; font-size: 24px; font-weight: 100; text-shadow: 0 0 20px rgba(126,200,227,0.8);');
-console.log(`%cφ = ${PHI.toFixed(3)}`, 'color: #a8d5e8; font-size: 12px;');
-console.log(`%c✦ Fibonacci: ${FIBONACCI.slice(0, 8).join(', ')}...`, 'color: #a8d5e8; font-size: 12px;');
+console.log(`%cÏ† = ${PHI.toFixed(3)}`, 'color: #a8d5e8; font-size: 12px;');
+console.log(`%câœ¦ Fibonacci: ${FIBONACCI.slice(0, 8).join(', ')}...`, 'color: #a8d5e8; font-size: 12px;');
 
 // Console helpers for theme debugging
 window.themeDebug = {

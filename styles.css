@@ -1040,15 +1040,15 @@ body[data-theme="dark"] .panel-glass-base {
 .panel-content {
     position: relative;
     padding: 20px;
-    padding-bottom: 50px;  /* Reserve 50px for panel-data (15px bottom + 25px height + 10px buffer) */
+    padding-bottom: 50px;
     height: 100%;
     z-index: 1;
     pointer-events: auto;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    box-sizing: border-box;  /* Ensure padding is included in height calculation */
-    background: transparent;  /* Ensure glass shows through */
+    box-sizing: border-box;
+    background: transparent;
 }
 
 .panel-icon {
@@ -1077,26 +1077,23 @@ body[data-theme="dark"] .panel-glass-base {
 
 .panel-description {
     font-size: 11px;
-    line-height: 1.4;  /* Slightly tighter for better fit */
+    line-height: 1.6;
     color: var(--text-light);
-    opacity: 0.9;  /* Slightly increased for better readability */
+    opacity: 0.9;
     overflow: hidden;
-    /* Use remaining space but don't overlap bottom area */
     flex: 1 1 auto;
-    min-height: 0;  /* Important for Firefox */
+    min-height: 0;
     display: -webkit-box;
-    -webkit-line-clamp: 2;  /* Reduced to 2 lines to ensure no overlap */
+    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
-    text-overflow: ellipsis;  /* Add ellipsis for cut-off text */
+    text-overflow: ellipsis;
     padding-right: 5px;
-    word-wrap: break-word;  /* Break long words if needed */
-    /* Ensure text never goes below this point */
-    max-height: 45px;  /* Explicit max height for 2 lines at 11px with 1.4 line-height */
+    word-wrap: break-word;
 }
 
 .panel-data {
     position: absolute;
-    bottom: 15px;  /* Moved closer to bottom for more content space */
+    bottom: 15px;
     left: 20px;
     right: 20px;
     display: flex;
@@ -1105,27 +1102,22 @@ body[data-theme="dark"] .panel-glass-base {
     color: var(--accent-cyan);
     text-transform: uppercase;
     letter-spacing: 1px;
-    opacity: 0.9;  /* Increased opacity for better visibility */
-    padding: 6px 0 0 0;  /* Slightly reduced top padding */
-    /* Subtle separator line */
+    opacity: 0.9;
+    padding: 6px 0 0 0;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
-    /* Crisp text shadow without blur for sharp text */
     text-shadow: 
-        0 1px 1px rgba(0, 0, 0, 0.5),  /* Sharp dark shadow for contrast */
-        0 -1px 0 rgba(255, 255, 255, 0.1);  /* Subtle top highlight */
-    font-weight: 500;  /* Bolder for better readability without blur */
-    /* Ensure text is sharp */
+        0 1px 1px rgba(0, 0, 0, 0.5),
+        0 -1px 0 rgba(255, 255, 255, 0.1);
+    font-weight: 500;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    /* Set explicit height to ensure consistent spacing */
-    height: 25px;  /* Fixed height for consistent layout */
-    align-items: center;  /* Vertically center the text */
+    height: 25px;
+    align-items: center;
 }
 
-/* Hover effect without blur */
 .nav-panel:hover .panel-data {
     opacity: 1;
-    color: rgba(126, 200, 227, 1);  /* Brighter on hover */
+    color: rgba(126, 200, 227, 1);
     text-shadow: 
         0 1px 2px rgba(0, 0, 0, 0.6),
         0 -1px 0 rgba(255, 255, 255, 0.15);
@@ -1720,6 +1712,95 @@ body[data-theme="dark"] .bottom-link a:hover {
         rgba(148,130,255,0.5),
         rgba(107,90,255,0.3));
     box-shadow: 0 0 30px rgba(148,130,255,0.4);
+}
+
+/* Calendar Component Styling */
+.calendar-container {
+    will-change: transform;
+}
+
+body[data-theme="dark"] .calendar-container {
+    background: linear-gradient(135deg,
+        rgba(148,130,255,0.15),
+        rgba(107,90,255,0.08)) !important;
+}
+
+.calendar-nav {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.calendar-nav:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(126,200,227,0.3);
+}
+
+body[data-theme="dark"] .calendar-nav {
+    background: linear-gradient(135deg,
+        rgba(148,130,255,0.15),
+        rgba(107,90,255,0.08)) !important;
+}
+
+body[data-theme="dark"] .calendar-nav:hover {
+    box-shadow: 0 5px 20px rgba(148,130,255,0.3) !important;
+}
+
+.calendar-day {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body[data-theme="dark"] .calendar-day {
+    background: rgba(148,130,255,0.05) !important;
+    border-color: rgba(148,130,255,0.2) !important;
+}
+
+body[data-theme="dark"] .calendar-day:hover {
+    background: linear-gradient(135deg, 
+        rgba(148,130,255,0.2), 
+        rgba(107,90,255,0.1)) !important;
+}
+
+.team-photo-placeholder {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body[data-theme="dark"] .team-photo-placeholder {
+    background: linear-gradient(135deg,
+        rgba(148,130,255,0.2),
+        rgba(107,90,255,0.15)) !important;
+}
+
+/* Responsive calendar for mobile */
+@media screen and (max-width: 768px) {
+    .calendar-grid {
+        gap: 5px !important;
+    }
+    
+    .calendar-day {
+        font-size: 12px !important;
+    }
+    
+    .calendar-header h2 {
+        font-size: 18px !important;
+    }
+    
+    .calendar-nav {
+        padding: 8px 15px !important;
+        font-size: 12px !important;
+    }
+    
+    .team-photo-placeholder {
+        aspect-ratio: 4/3 !important;
+        font-size: 12px !important;
+    }
+    
+    .expanded-title {
+        font-size: 32px !important;
+        margin-bottom: 30px !important;
+    }
+    
+    .calendar-container {
+        padding: 20px !important;
+    }
 }
 
 /* Neural Network Animations */
