@@ -99,7 +99,7 @@ const ThemeManager = {
         }
         
         // Log final theme initialization
-        console.log(`%cÃ¢Å“Â¨ Theme initialized: ${initialTheme} mode`, 
+        console.log(`%c✨ Theme initialized: ${initialTheme} mode`,
             `color: ${initialTheme === 'dark' ? '#9482ff' : '#7ec8e3'}; font-weight: bold; font-size: 14px;`);
     },
     
@@ -152,7 +152,7 @@ const ThemeManager = {
         this.setTheme(newTheme, true, true);
         
         // Log theme change with styled console message
-        console.log(`%cÃ°Å¸â€â€ž Theme manually switched to: ${newTheme} mode`, 
+        console.log(`%c🌞 Theme manually switched to: ${newTheme} mode`,
             `color: ${newTheme === 'dark' ? '#9482ff' : '#7ec8e3'}; font-weight: bold;`);
     },
     
@@ -166,7 +166,7 @@ const ThemeManager = {
         localStorage.removeItem('nscc-theme');
         localStorage.removeItem('nscc-theme-manually-set');
         localStorage.removeItem('nscc-has-visited');
-        console.log('%cÃ°Å¸â€”â€˜Ã¯Â¸Â Theme preferences cleared', 'color: #ff6b6b;');
+        console.log('%c🗑️ Theme preferences cleared', 'color: #ff6b6b;');
     }
 };
 
@@ -472,6 +472,24 @@ class GoldenPanelPhysics {
             
             this.addPanelListeners(panel);
         });
+        
+        // Reveal all positioned elements with smooth fade-in
+        this.revealPositionedElements();
+    }
+    
+    // Reveal elements after positioning is complete - prevents FOUC
+    revealPositionedElements() {
+        const elements = document.querySelectorAll('.js-positioned');
+        
+        if (elements.length === 0) return;
+        
+        // Add 'ready' class to trigger fade-in transition
+        elements.forEach((element) => {
+            element.classList.add('ready');
+        });
+        
+        console.log('%c✓ Elements positioned and revealed', 
+            'color: #7ec8e3; font-weight: bold;');
     }
     
     addPanelListeners(panel) {
@@ -881,6 +899,16 @@ function init() {
         harmonicMotion = new HarmonicMotionSystem();
         panelPhysics = new GoldenPanelPhysics();
         dataStreamController = new DataStreamController();
+        
+        // FAILSAFE: Reveal elements after timeout if positioning hasn't completed
+        // This prevents page from appearing frozen if JS takes too long
+        setTimeout(() => {
+            const stillHidden = document.querySelectorAll('.js-positioned:not(.ready)');
+            if (stillHidden.length > 0) {
+                console.warn('⚠ Failsafe timeout: Force revealing ' + stillHidden.length + ' elements');
+                stillHidden.forEach(el => el.classList.add('ready'));
+            }
+        }, 2000); // Maximum 2 second wait
         
         createGoldenStructures();
         
@@ -1462,11 +1490,13 @@ function collapsePanel() {
 
 function fadeOutElements() {
     // Fade out title, subtitle, and other panels
+    console.log('[fadeOutElements] Hiding panels except:', currentExpandedPanel);
     document.getElementById('siteTitle').classList.add('hidden');
     document.getElementById('siteSubtitle').classList.add('hidden');
     
     document.querySelectorAll('.nav-panel').forEach(panel => {
         if (panel.id !== currentExpandedPanel) {
+            console.log('[fadeOutElements] Added hidden to ' + panel.id + ', classes:', panel.className);
             panel.classList.add('hidden');
         }
     });
@@ -1527,7 +1557,7 @@ function getLeadershipContent() {
                 <div class="leader-role">Co-President</div>
                 <div class="leader-name">William Keffer</div>
                 <div class="leader-description">
-                    William Keffer is a UNC-Chapel Hill student and the driving force behind the Natural Sciences Computing Club (NSCC), where he bridges natural sciences with modern computing through hands-on workshops, project sprints, and mentorship. He focuses on practical Python and Jupyter workflows, data visualization, and approachable machine learningÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Âhelping members turn curiosity into portfolio-ready projects that mix biology, physics, and earth science with code. With a sharp eye for design and user experience, William also shapes NSCC's brand and web presence, championing creative, high-quality visuals alongside clean, reproducible pipelines. Above all, he's building an inclusive, collaborative community that celebrates both scientific rigor and inventive, real-world problem-solving.
+                    William Keffer is a UNC-Chapel Hill student and the driving force behind the Natural Sciences Computing Club (NSCC), where he bridges natural sciences with modern computing through hands-on workshops, project sprints, and mentorship. He focuses on practical Python and Jupyter workflows, data visualization, and approachable machine learning—helping members turn curiosity into portfolio-ready projects that mix biology, physics, and earth science with code. With a sharp eye for design and user experience, William also shapes NSCC's brand and web presence, championing creative, high-quality visuals alongside clean, reproducible pipelines. Above all, he's building an inclusive, collaborative community that celebrates both scientific rigor and inventive, real-world problem-solving.
                 </div>
             </div>
         </div>
@@ -1537,7 +1567,7 @@ function getLeadershipContent() {
                 <div class="leader-role">Co-President</div>
                 <div class="leader-name">Osman Taka</div>
                 <div class="leader-description">
-                    Osman Taka is a Computer Science and Physics double major at UNC Chapel Hill with a passion for using computational tools to tackle challenges in the natural sciences. He's drawn to projects that merge programming with scientific researchÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Âwhether that's modeling complex systems or developing tools that make discovery more accessible. With experience leading robotics, math, and engineering initiatives, Osman values collaboration and creative problem-solving. Through the Natural Sciences Computing Club, he hopes to build a community where students from different disciplines can explore the intersection of computation and science, and work together on projects that make a real impact.
+                    Osman Taka is a Computer Science and Physics double major at UNC Chapel Hill with a passion for using computational tools to tackle challenges in the natural sciences. He's drawn to projects that merge programming with scientific research—whether that's modeling complex systems or developing tools that make discovery more accessible. With experience leading robotics, math, and engineering initiatives, Osman values collaboration and creative problem-solving. Through the Natural Sciences Computing Club, he hopes to build a community where students from different disciplines can explore the intersection of computation and science, and work together on projects that make a real impact.
                 </div>
             </div>
             <div class="leader-image leader-image-right">
@@ -1671,10 +1701,10 @@ if (document.readyState === 'loading') {
     checkThreeJS();
 }
 
-console.log('%cÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã¢â‚¬Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¦ GOLDEN RATIO CYBERCORE INITIALIZED', 
+console.log('%c✦ GOLDEN RATIO CYBERCORE INITIALIZED',
     'color: #7ec8e3; font-size: 24px; font-weight: 100; text-shadow: 0 0 20px rgba(126,200,227,0.8);');
-console.log(`%cÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚ÂÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â  = ${PHI.toFixed(3)}`, 'color: #a8d5e8; font-size: 12px;');
-console.log(`%cÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â‚¬Å¾Ã‚Â¢ Fibonacci: ${FIBONACCI.slice(0, 8).join(', ')}...`, 'color: #a8d5e8; font-size: 12px;');
+console.log(`%cφ = ${PHI.toFixed(3)}`, 'color: #a8d5e8; font-size: 12px;');
+console.log(`%c✦ Fibonacci: ${FIBONACCI.slice(0, 8).join(', ')}...`, 'color: #a8d5e8; font-size: 12px;');
 
 // Console helpers for theme debugging
 window.themeDebug = {

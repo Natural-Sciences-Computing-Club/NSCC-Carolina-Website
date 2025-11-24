@@ -33,6 +33,12 @@
             background: linear-gradient(180deg, #0a0b0f 0%, #12141a 50%, #1a1c24 100%);
         }
         #debug { display: block; }
+        
+        /* CRITICAL FIX: Hide elements before JS positions them - prevents FOUC */
+        .js-positioned {
+            visibility: hidden !important;
+            opacity: 0 !important;
+        }
     </style>
     
     <!-- Early theme detection to prevent flash of incorrect theme -->
@@ -186,8 +192,8 @@
     <div class="cyberspace" id="cyberspace">
         
         <!-- Chrome Title -->
-        <h1 class="chrome-title fade-element" id="siteTitle">NSCC</h1>
-        <p class="subtitle fade-element" id="siteSubtitle">Natural Sciences Computing Club</p>
+        <h1 class="chrome-title fade-element js-positioned" id="siteTitle">NSCC</h1>
+        <p class="subtitle fade-element js-positioned" id="siteSubtitle">Natural Sciences Computing Club</p>
         
         <!-- Primary Dodecahedron Cluster -->
         <div class="shape-cluster cluster-primary">
@@ -229,7 +235,7 @@
         <div class="data-stream" id="dataStream3"></div>
         
         <!-- Navigation Panels -->
-        <div class="nav-panel fade-element" id="panel1" data-original-x="5" data-original-y="45" data-content-type="research">
+        <div class="nav-panel fade-element js-positioned" id="panel1" data-original-x="5" data-original-y="45" data-content-type="research">
             <div class="panel-glass-container">
                 <div class="panel-glass-layer panel-glass-base"></div>
                 <div class="panel-glass-layer panel-glass-gloss"></div>
@@ -253,7 +259,7 @@
             </div>
         </div>
         
-        <div class="nav-panel fade-element" id="panel2" data-original-x="77" data-original-y="45" data-content-type="workshops">
+        <div class="nav-panel fade-element js-positioned" id="panel2" data-original-x="77" data-original-y="45" data-content-type="workshops">
             <div class="panel-glass-container">
                 <div class="panel-glass-layer panel-glass-base"></div>
                 <div class="panel-glass-layer panel-glass-gloss"></div>
@@ -277,7 +283,7 @@
             </div>
         </div>
         
-        <div class="nav-panel fade-element" id="panel3" data-original-x="41" data-original-y="45" data-content-type="community">
+        <div class="nav-panel fade-element js-positioned" id="panel3" data-original-x="41" data-original-y="45" data-content-type="community">
             <div class="panel-glass-container">
                 <div class="panel-glass-layer panel-glass-base"></div>
                 <div class="panel-glass-layer panel-glass-gloss"></div>
@@ -301,7 +307,7 @@
             </div>
         </div>
         
-        <div class="nav-panel fade-element" id="panel4" data-original-x="23" data-original-y="35" data-content-type="join">
+        <div class="nav-panel fade-element js-positioned" id="panel4" data-original-x="23" data-original-y="35" data-content-type="join">
             <div class="panel-glass-container">
                 <div class="panel-glass-layer panel-glass-base"></div>
                 <div class="panel-glass-layer panel-glass-gloss"></div>
@@ -325,7 +331,7 @@
             </div>
         </div>
         
-        <div class="nav-panel fade-element" id="panel5" data-original-x="59" data-original-y="35" data-content-type="leadership">
+        <div class="nav-panel fade-element js-positioned" id="panel5" data-original-x="59" data-original-y="35" data-content-type="leadership">
             <div class="panel-glass-container">
                 <div class="panel-glass-layer panel-glass-base"></div>
                 <div class="panel-glass-layer panel-glass-gloss"></div>
@@ -357,5 +363,15 @@
     <script defer src="script.js"></script>
     <!-- Load mobile handler script -->
     <script defer src="mobile.js"></script>
+    
+    <!-- Fallback for JavaScript disabled - reveal hidden elements -->
+    <noscript>
+        <style>
+            .js-positioned {
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
+        </style>
+    </noscript>
 </body>
 </html>

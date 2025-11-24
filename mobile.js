@@ -40,13 +40,13 @@ const MobileHandler = {
         // SAFEGUARD: Don't run on desktop at all
         const isDesktop = window.innerWidth > 1024 || (window.innerWidth > 768 && !('ontouchstart' in window));
         if (isDesktop) {
-            console.log('%cðŸ’» Desktop detected - mobile handler disabled', 'color: #7ec8e3;');
+            console.log('%c💻 Desktop detected - mobile handler disabled', 'color: #7ec8e3;');
             return;
         }
         
         this.initialized = true;
         
-        console.log('%cðŸ“± Mobile handler initialized', 'color: #7ec8e3;');
+        console.log('%c📱 Mobile handler initialized', 'color: #7ec8e3;');
         
         // Check initial state
         this.checkMobile();
@@ -77,7 +77,7 @@ const MobileHandler = {
     
     // Enable mobile portrait mode
     enableMobileMode: function() {
-        console.log('%cðŸ“± Mobile portrait mode activated', 'color: #7ec8e3; font-weight: bold;');
+        console.log('%c📱 Mobile portrait mode activated', 'color: #7ec8e3; font-weight: bold;');
         
         // Add mobile class to body
         document.body.classList.add('mobile-portrait');
@@ -112,7 +112,7 @@ const MobileHandler = {
     
     // Disable mobile portrait mode
     disableMobileMode: function() {
-        console.log('%cðŸ–¥ï¸ Desktop/landscape mode activated', 'color: #7ec8e3; font-weight: bold;');
+        console.log('%cÃ°Å¸â€“Â¥Ã¯Â¸Â Desktop/landscape mode activated', 'color: #7ec8e3; font-weight: bold;');
         
         // Remove mobile class
         document.body.classList.remove('mobile-portrait');
@@ -143,7 +143,17 @@ const MobileHandler = {
     setupCollapsiblePanels: function() {
         const panels = document.querySelectorAll('.nav-panel');
         
+        // Movement thresholds for detecting intentional taps vs scrolls
+        const MOVEMENT_THRESHOLD = 10; // pixels - touch must move less than this
+        const TIME_THRESHOLD = 300; // milliseconds - tap should be reasonably quick
+        
         panels.forEach((panel) => {
+            // Touch tracking variables for this panel
+            let touchStartX = 0;
+            let touchStartY = 0;
+            let touchStartTime = 0;
+            let hasMoved = false;
+            
             // Store panel's bound handler
             if (!panel._mobileClickHandler) {
                 panel._mobileClickHandler = (e) => {
@@ -176,17 +186,66 @@ const MobileHandler = {
                 };
             }
             
+            // Track touch start position and time
+            if (!panel._touchStartHandler) {
+                panel._touchStartHandler = (e) => {
+                    const touch = e.touches[0];
+                    touchStartX = touch.clientX;
+                    touchStartY = touch.clientY;
+                    touchStartTime = Date.now();
+                    hasMoved = false;
+                };
+            }
+            
+            // Track touch movement to detect scrolling
+            if (!panel._touchMoveHandler) {
+                panel._touchMoveHandler = (e) => {
+                    if (e.touches.length === 0) return;
+                    
+                    const touch = e.touches[0];
+                    const deltaX = Math.abs(touch.clientX - touchStartX);
+                    const deltaY = Math.abs(touch.clientY - touchStartY);
+                    
+                    // If moved more than threshold, mark as scroll gesture
+                    if (deltaX > MOVEMENT_THRESHOLD || deltaY > MOVEMENT_THRESHOLD) {
+                        hasMoved = true;
+                    }
+                };
+            }
+            
+            // Handle touch end - only trigger if not scrolling
+            if (!panel._touchEndHandler) {
+                panel._touchEndHandler = (e) => {
+                    e.preventDefault(); // Prevent ghost click
+                    
+                    const touchDuration = Date.now() - touchStartTime;
+                    
+                    // Only trigger if:
+                    // 1. Touch hasn't moved significantly (not scrolling)
+                    // 2. Touch was quick (not a long press)
+                    if (!hasMoved && touchDuration < TIME_THRESHOLD) {
+                        // This is an intentional tap - trigger panel expansion
+                        panel._mobileClickHandler(e);
+                    }
+                    
+                    // Reset tracking
+                    hasMoved = false;
+                };
+            }
+            
             // Remove existing listeners to prevent duplicates
             panel.removeEventListener('click', panel._mobileClickHandler);
-            panel.removeEventListener('touchend', panel._mobileClickHandler);
+            panel.removeEventListener('touchstart', panel._touchStartHandler);
+            panel.removeEventListener('touchmove', panel._touchMoveHandler);
+            panel.removeEventListener('touchend', panel._touchEndHandler);
             
-            // Add mobile click handler
+            // Add mobile click handler for non-touch (desktop fallback)
             panel.addEventListener('click', panel._mobileClickHandler);
-            panel.addEventListener('touchend', panel._mobileClickHandler);
             
-            // Prevent default drag behavior
-            panel.addEventListener('touchstart', this.preventDrag, { passive: false });
-            panel.addEventListener('touchmove', this.preventDrag, { passive: false });
+            // Add touch handlers with movement detection
+            panel.addEventListener('touchstart', panel._touchStartHandler, { passive: true });
+            panel.addEventListener('touchmove', panel._touchMoveHandler, { passive: true });
+            panel.addEventListener('touchend', panel._touchEndHandler);
             
             // Add ARIA attributes for accessibility
             panel.setAttribute('role', 'button');
@@ -213,13 +272,19 @@ const MobileHandler = {
         panels.forEach((panel) => {
             if (panel._mobileClickHandler) {
                 panel.removeEventListener('click', panel._mobileClickHandler);
-                panel.removeEventListener('touchend', panel._mobileClickHandler);
+            }
+            if (panel._touchStartHandler) {
+                panel.removeEventListener('touchstart', panel._touchStartHandler);
+            }
+            if (panel._touchMoveHandler) {
+                panel.removeEventListener('touchmove', panel._touchMoveHandler);
+            }
+            if (panel._touchEndHandler) {
+                panel.removeEventListener('touchend', panel._touchEndHandler);
             }
             if (panel._keyHandler) {
                 panel.removeEventListener('keydown', panel._keyHandler);
             }
-            panel.removeEventListener('touchstart', this.preventDrag);
-            panel.removeEventListener('touchmove', this.preventDrag);
             panel.removeAttribute('role');
             panel.removeAttribute('aria-expanded');
             panel.removeAttribute('tabindex');
@@ -250,4 +315,4 @@ if (document.readyState === 'loading') {
 // Export for use in other scripts
 window.MobileHandler = MobileHandler;
 
-console.log('%câœ¨ Mobile handler loaded', 'color: #a8d5e8; font-size: 12px;');
+console.log('%cÃ¢Å“Â¨ Mobile handler loaded', 'color: #a8d5e8; font-size: 12px;');
