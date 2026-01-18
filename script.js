@@ -1493,7 +1493,7 @@ function fadeOutElements() {
     console.log('[fadeOutElements] Hiding panels except:', currentExpandedPanel);
     document.getElementById('siteTitle').classList.add('hidden');
     document.getElementById('siteSubtitle').classList.add('hidden');
-    
+
     document.querySelectorAll('.nav-panel').forEach(panel => {
         if (panel.id !== currentExpandedPanel) {
             console.log('[fadeOutElements] Added hidden to ' + panel.id + ', classes:', panel.className);
@@ -1506,7 +1506,7 @@ function fadeInElements() {
     // Fade in title, subtitle, and all panels
     document.getElementById('siteTitle').classList.remove('hidden');
     document.getElementById('siteSubtitle').classList.remove('hidden');
-    
+
     console.log('[fadeInElements] Starting to restore panels');
     document.querySelectorAll('.nav-panel').forEach(panel => {
         // Clear any inline opacity and pointer-events styles
@@ -1533,6 +1533,8 @@ function loadContent(contentType, container) {
             break;
         case 'events':
             container.innerHTML = getEventsContent();
+            // Initialize calendar controls after content is rendered
+            setTimeout(initCalendarControls, 0);
             break;
         case 'about':
             container.innerHTML = getAboutContent();
@@ -1588,25 +1590,227 @@ function getLeadershipContent() {
             </div>
         </div>
         
-        <div class="bottom-link">
-            <a href="#" onclick="return false;">2025-26 Officer Positions</a>
-        </div>
     `;
 }
 
 function getProjectsContent() {
     return `
         <h1 class="expanded-title">Projects</h1>
-        <div style="text-align: center; padding: 60px 20px; color: var(--text-light); font-size: 18px; font-weight: 300; letter-spacing: 1px;">
-            Coming soon
+
+        <div class="project-card" style="
+            max-width: 1000px;
+            margin: 40px auto;
+            background: linear-gradient(135deg,
+                var(--glass-white),
+                var(--glass-blue));
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow:
+                inset 0 2px 4px var(--glass-shadow-light),
+                inset 0 -2px 4px var(--glass-shadow-dark),
+                0 10px 40px var(--shadow-primary);
+        ">
+            <div class="project-image" style="
+                width: 100%;
+                height: 250px;
+                background: linear-gradient(135deg, rgba(126,200,227,0.3), rgba(148,130,255,0.2));
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-bottom: 1px solid var(--glass-border);
+            ">
+                <img src="./kuramoto.png" alt="Kuramoto Neural Synchronization Simulator" style="
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                " onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\\'color: var(--text-light); font-size: 14px; letter-spacing: 1px;\\'>Project Image</div>';">
+            </div>
+
+            <div class="project-content" style="padding: 30px;">
+                <h2 style="
+                    font-size: 22px;
+                    font-weight: 400;
+                    color: var(--text-dark);
+                    margin-bottom: 20px;
+                    letter-spacing: 1px;
+                ">NSCC Neural Kuramoto Synchronization Simulator</h2>
+
+                <p style="
+                    font-size: 15px;
+                    line-height: 1.8;
+                    color: var(--text-light);
+                    margin-bottom: 25px;
+                    text-align: justify;
+                ">
+                    The NSCC Neural Kuramoto Synchronization Simulator is an interactive visualization tool that models the emergent synchronization dynamics of coupled neural oscillators across the human brain's connectome. Built upon the Kuramoto model—a mathematical framework for studying synchronization phenomena in complex systems—this simulator leverages real structural connectivity data from the Human Connectome Project to demonstrate how neural hubs coordinate rhythmic activity across distributed brain regions. By adjusting coupling strength and observing the resulting phase coherence patterns, users can explore fundamental principles of neural synchrony that underlie cognition, perception, and neurological disorders. This project bridges computational neuroscience with accessible, hands-on learning, enabling students to engage directly with cutting-edge research methodologies.
+                </p>
+
+                <a href="https://williethewhale.github.io/Kuramoto_Neural/" target="_blank" rel="noopener noreferrer" style="
+                    display: inline-block;
+                    background: linear-gradient(135deg, var(--accent-cyan), var(--primary-blue));
+                    color: white;
+                    padding: 12px 28px;
+                    border-radius: 10px;
+                    text-decoration: none;
+                    font-size: 14px;
+                    font-weight: 400;
+                    letter-spacing: 1px;
+                    transition: all 0.3s;
+                    box-shadow: 0 4px 15px rgba(126,200,227,0.3);
+                " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(126,200,227,0.4)';"
+                   onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(126,200,227,0.3)';">
+                    Try Our Simulator
+                </a>
+
+                <div class="project-references" style="
+                    margin-top: 30px;
+                    padding-top: 25px;
+                    border-top: 1px solid var(--glass-border);
+                ">
+                    <h3 style="
+                        font-size: 14px;
+                        font-weight: 400;
+                        color: var(--text-dark);
+                        margin-bottom: 15px;
+                        letter-spacing: 1px;
+                    ">References & Data Sources</h3>
+
+                    <div style="font-size: 12px; line-height: 1.8; color: var(--text-light);">
+                        <p style="margin-bottom: 10px;">
+                            Schmidt, R., et al. "Kuramoto Model Simulation of Neural Hubs and Dynamic Synchrony in the Human Cerebral Connectome." <em>BMC Neuroscience</em>, vol. 16, no. 54, 2015.
+                            <a href="https://doi.org/10.1186/s12868-015-0193-z" target="_blank" style="color: var(--accent-cyan);">doi:10.1186/s12868-015-0193-z</a>
+                        </p>
+                        <p style="margin-bottom: 10px;">
+                            Van Essen, D.C., et al. "The WU-Minn Human Connectome Project: An Overview." <em>NeuroImage</em>, vol. 80, 2013, pp. 62–79.
+                            <a href="https://doi.org/10.1016/j.neuroimage.2013.05.041" target="_blank" style="color: var(--accent-cyan);">doi:10.1016/j.neuroimage.2013.05.041</a>
+                        </p>
+                        <p style="margin-bottom: 10px;">
+                            Ódor, G., and Kelling, J. "Critical Synchronization Dynamics of the Kuramoto Model on Connectome and Small World Graphs." <em>arXiv</em>, 2019.
+                            <a href="https://arxiv.org/abs/1903.00385" target="_blank" style="color: var(--accent-cyan);">arXiv:1903.00385</a>
+                        </p>
+                        <p>
+                            Human Connectome Project. <em>1200 Subjects Data Release</em>. WU-Minn Consortium, 2017.
+                            <a href="https://www.humanconnectome.org/study/hcp-young-adult/document/1200-subjects-data-release" target="_blank" style="color: var(--accent-cyan);">humanconnectome.org</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
     `;
+}
+
+// Calendar state
+let calendarDate = new Date();
+let calendarEvents = [];
+
+// Google Calendar API configuration
+const GOOGLE_CALENDAR_API_KEY = 'AIzaSyDTeopE_3cX7jZlpaLY8nXK2DVOS2rn1Yo';
+const GOOGLE_CALENDAR_ID = 'info.uncnscc@gmail.com';
+
+async function fetchCalendarEvents() {
+    const year = calendarDate.getFullYear();
+    const month = calendarDate.getMonth();
+
+    // Get first and last day of the month for the API query
+    const timeMin = new Date(year, month, 1).toISOString();
+    const timeMax = new Date(year, month + 1, 0, 23, 59, 59).toISOString();
+
+    const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(GOOGLE_CALENDAR_ID)}/events?key=${GOOGLE_CALENDAR_API_KEY}&timeMin=${timeMin}&timeMax=${timeMax}&singleEvents=true&orderBy=startTime`;
+
+    console.log('Fetching calendar events from:', url);
+
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        console.log('Calendar API response:', data);
+
+        if (data.error) {
+            console.error('Calendar API error:', data.error.message);
+            calendarEvents = [];
+        } else if (data.items) {
+            calendarEvents = data.items.map(event => ({
+                id: event.id,
+                title: event.summary || 'Untitled Event',
+                description: event.description || '',
+                start: event.start.dateTime || event.start.date,
+                end: event.end.dateTime || event.end.date,
+                location: event.location || ''
+            }));
+            console.log('Parsed events:', calendarEvents);
+        } else {
+            calendarEvents = [];
+        }
+    } catch (error) {
+        console.error('Error fetching calendar events:', error);
+        calendarEvents = [];
+    }
+
+    return calendarEvents;
+}
+
+function getEventsForDay(day) {
+    const year = calendarDate.getFullYear();
+    const month = calendarDate.getMonth();
+    const targetDate = new Date(year, month, day).toDateString();
+
+    return calendarEvents.filter(event => {
+        const eventDate = new Date(event.start).toDateString();
+        return eventDate === targetDate;
+    });
+}
+
+function showEventDetails(day) {
+    const events = getEventsForDay(day);
+    const eventDetailsEl = document.getElementById('eventDetails');
+
+    if (!eventDetailsEl) return;
+
+    if (events.length === 0) {
+        eventDetailsEl.innerHTML = `
+            <div style="text-align: center; color: var(--text-light); padding: 20px;">
+                No events scheduled for this day.
+            </div>
+        `;
+    } else {
+        eventDetailsEl.innerHTML = events.map(event => {
+            const startTime = new Date(event.start);
+            const timeString = startTime.toLocaleTimeString('en-US', {
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            });
+
+            return `
+                <div style="
+                    background: linear-gradient(135deg, rgba(126,200,227,0.15), rgba(126,200,227,0.05));
+                    border: 1px solid var(--glass-border);
+                    border-left: 3px solid var(--accent-cyan);
+                    border-radius: 8px;
+                    padding: 15px;
+                    margin-bottom: 10px;
+                ">
+                    <div style="font-weight: 400; color: var(--text-dark); margin-bottom: 5px;">
+                        ${event.title}
+                    </div>
+                    <div style="font-size: 12px; color: var(--text-light);">
+                        ${timeString}${event.location ? ' • ' + event.location : ''}
+                    </div>
+                    ${event.description ? `<div style="font-size: 13px; color: var(--text-light); margin-top: 8px;">${event.description}</div>` : ''}
+                </div>
+            `;
+        }).join('');
+    }
+
+    eventDetailsEl.style.display = 'block';
 }
 
 function getEventsContent() {
     return `
         <h1 class="expanded-title">Event Schedule</h1>
-        
+
         <div class="calendar-container" style="
             max-width: 1000px;
             margin: 40px auto;
@@ -1617,7 +1821,7 @@ function getEventsContent() {
             border: 1px solid var(--glass-border);
             border-radius: 20px;
             padding: 30px;
-            box-shadow: 
+            box-shadow:
                 inset 0 2px 4px var(--glass-shadow-light),
                 inset 0 -2px 4px var(--glass-shadow-dark),
                 0 10px 40px var(--shadow-primary);
@@ -1630,7 +1834,7 @@ function getEventsContent() {
                 padding-bottom: 20px;
                 border-bottom: 1px solid var(--glass-border);
             ">
-                <button class="calendar-nav" style="
+                <button class="calendar-nav" id="prevMonth" style="
                     background: linear-gradient(135deg,
                         var(--panel-glass-gradient-1),
                         var(--panel-glass-gradient-2));
@@ -1642,15 +1846,15 @@ function getEventsContent() {
                     font-size: 14px;
                     transition: all 0.3s;
                 ">← Previous</button>
-                
-                <h2 style="
+
+                <h2 id="calendarMonthYear" style="
                     font-size: 24px;
                     font-weight: 300;
                     color: var(--text-dark);
                     letter-spacing: 2px;
-                ">November 2025</h2>
-                
-                <button class="calendar-nav" style="
+                "></h2>
+
+                <button class="calendar-nav" id="nextMonth" style="
                     background: linear-gradient(135deg,
                         var(--panel-glass-gradient-1),
                         var(--panel-glass-gradient-2));
@@ -1663,7 +1867,7 @@ function getEventsContent() {
                     transition: all 0.3s;
                 ">Next →</button>
             </div>
-            
+
             <div class="calendar-grid" style="
                 display: grid;
                 grid-template-columns: repeat(7, 1fr);
@@ -1676,45 +1880,130 @@ function getEventsContent() {
                 <div style="text-align: center; font-weight: 300; color: var(--text-light); padding: 15px 0; font-size: 12px; letter-spacing: 1px;">THU</div>
                 <div style="text-align: center; font-weight: 300; color: var(--text-light); padding: 15px 0; font-size: 12px; letter-spacing: 1px;">FRI</div>
                 <div style="text-align: center; font-weight: 300; color: var(--text-light); padding: 15px 0; font-size: 12px; letter-spacing: 1px;">SAT</div>
-                
-                ${Array(35).fill(0).map((_, i) => {
-                    const day = i + 1;
-                    const isCurrentDay = day === 23;
-                    return `
-                        <div class="calendar-day" style="
-                            aspect-ratio: 1;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            background: ${isCurrentDay ? 'linear-gradient(135deg, rgba(126,200,227,0.3), rgba(126,200,227,0.2))' : 'rgba(255,255,255,0.05)'};
-                            border: 1px solid ${isCurrentDay ? 'var(--accent-cyan)' : 'var(--glass-border)'};
-                            border-radius: 10px;
-                            color: var(--text-dark);
-                            font-size: 14px;
-                            cursor: pointer;
-                            transition: all 0.3s;
-                            backdrop-filter: blur(10px);
-                        " onmouseover="this.style.background='linear-gradient(135deg, rgba(126,200,227,0.2), rgba(126,200,227,0.1))'; this.style.transform='scale(1.05)';" 
-                           onmouseout="this.style.background='${isCurrentDay ? 'linear-gradient(135deg, rgba(126,200,227,0.3), rgba(126,200,227,0.2))' : 'rgba(255,255,255,0.05)'}'; this.style.transform='scale(1)';">
-                            ${day <= 30 ? day : ''}
-                        </div>
-                    `;
-                }).join('')}
+
+                <div id="calendarDays" style="display: contents;"></div>
             </div>
-            
-            <div style="
-                text-align: center;
+
+            <div id="eventDetails" style="
                 margin-top: 30px;
                 padding-top: 20px;
                 border-top: 1px solid var(--glass-border);
-                color: var(--text-light);
-                font-size: 13px;
-                font-style: italic;
+                display: none;
             ">
-                Events will be added as they are scheduled
+                <h3 style="
+                    font-size: 16px;
+                    font-weight: 300;
+                    color: var(--text-dark);
+                    margin-bottom: 15px;
+                    letter-spacing: 1px;
+                ">Events</h3>
             </div>
         </div>
     `;
+}
+
+async function renderCalendar() {
+    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                        'July', 'August', 'September', 'October', 'November', 'December'];
+
+    const year = calendarDate.getFullYear();
+    const month = calendarDate.getMonth();
+
+    // Update header
+    const monthYearEl = document.getElementById('calendarMonthYear');
+    if (monthYearEl) {
+        monthYearEl.textContent = `${monthNames[month]} ${year}`;
+    }
+
+    // Fetch events for this month
+    await fetchCalendarEvents();
+
+    // Get first day of month and number of days
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    // Get today's date for highlighting
+    const today = new Date();
+    const isCurrentMonth = today.getFullYear() === year && today.getMonth() === month;
+    const currentDay = today.getDate();
+
+    // Generate calendar days
+    const calendarDaysEl = document.getElementById('calendarDays');
+    if (!calendarDaysEl) return;
+
+    let daysHTML = '';
+
+    // Empty cells before first day
+    for (let i = 0; i < firstDay; i++) {
+        daysHTML += `<div style="aspect-ratio: 1;"></div>`;
+    }
+
+    // Day cells
+    for (let day = 1; day <= daysInMonth; day++) {
+        const isToday = isCurrentMonth && day === currentDay;
+        const dayEvents = getEventsForDay(day);
+        const hasEvents = dayEvents.length > 0;
+
+        daysHTML += `
+            <div class="calendar-day" onclick="showEventDetails(${day})" style="
+                aspect-ratio: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                background: ${isToday ? 'linear-gradient(135deg, rgba(126,200,227,0.3), rgba(126,200,227,0.2))' : 'rgba(255,255,255,0.05)'};
+                border: 1px solid ${isToday ? 'var(--accent-cyan)' : 'var(--glass-border)'};
+                border-radius: 10px;
+                color: var(--text-dark);
+                font-size: 14px;
+                cursor: pointer;
+                transition: all 0.3s;
+                backdrop-filter: blur(10px);
+                position: relative;
+            " onmouseover="this.style.background='linear-gradient(135deg, rgba(126,200,227,0.2), rgba(126,200,227,0.1))'; this.style.transform='scale(1.05)';"
+               onmouseout="this.style.background='${isToday ? 'linear-gradient(135deg, rgba(126,200,227,0.3), rgba(126,200,227,0.2))' : 'rgba(255,255,255,0.05)'}'; this.style.transform='scale(1)';">
+                ${day}
+                ${hasEvents ? `<div style="
+                    width: 6px;
+                    height: 6px;
+                    background: var(--accent-cyan);
+                    border-radius: 50%;
+                    margin-top: 4px;
+                    box-shadow: 0 0 6px var(--accent-cyan);
+                "></div>` : ''}
+            </div>
+        `;
+    }
+
+    calendarDaysEl.innerHTML = daysHTML;
+
+    // Hide event details when month changes
+    const eventDetailsEl = document.getElementById('eventDetails');
+    if (eventDetailsEl) {
+        eventDetailsEl.style.display = 'none';
+    }
+}
+
+function initCalendarControls() {
+    const prevBtn = document.getElementById('prevMonth');
+    const nextBtn = document.getElementById('nextMonth');
+
+    if (prevBtn) {
+        prevBtn.onclick = async function() {
+            calendarDate.setMonth(calendarDate.getMonth() - 1);
+            await renderCalendar();
+        };
+    }
+
+    if (nextBtn) {
+        nextBtn.onclick = async function() {
+            calendarDate.setMonth(calendarDate.getMonth() + 1);
+            await renderCalendar();
+        };
+    }
+
+    // Initial render
+    renderCalendar();
 }
 
 function getAboutContent() {
@@ -1802,7 +2091,7 @@ function getJoinContent() {
         </div>
         
         <div class="bottom-link">
-            <a href="#" onclick="return false;">Apply Now</a>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSeXDjQ1rFzCznz2djYKLmA55_X89u4LRuB1abz7UAESopJkhg/viewform" target="_blank" rel="noopener noreferrer">Apply Now</a>
         </div>
     `;
 }
