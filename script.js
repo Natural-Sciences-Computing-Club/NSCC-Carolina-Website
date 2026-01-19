@@ -1569,7 +1569,7 @@ function getLeadershipContent() {
                 <div class="leader-role">Co-President</div>
                 <div class="leader-name">Osman Taka</div>
                 <div class="leader-description">
-                    Osman is a sophomore double-majoring in Physics and Computer Science and is the founder and co-president of NSCC. He specializes in computational physics, machine learning for image processing, and robotics. His primary expertise lies in computational methods for physical sciences, such as numerical simulation, computer vision, and nanotechnology. Osman applies scientific and mathematical logic to drive computational research and development at NSCC. In his free time, he enjoys foraging, gardening, and woodworking.
+                    Osman is a sophomore double-majoring in Physics and Computer Science and is a founder and co-president of NSCC. He specializes in computational physics, machine learning for image processing, and robotics. His primary expertise lies in computational methods for physical sciences, such as numerical simulation, computer vision, and nanotechnology. Osman applies scientific and mathematical logic to drive computational research and development at NSCC. In his free time, he enjoys foraging, gardening, and woodworking.
                 </div>
             </div>
             <div class="leader-image leader-image-right">
