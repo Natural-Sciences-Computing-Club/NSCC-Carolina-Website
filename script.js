@@ -1569,14 +1569,14 @@ function getLeadershipContent() {
                 <div class="leader-role">Co-President</div>
                 <div class="leader-name">Osman Taka</div>
                 <div class="leader-description">
-                    Osman Taka is a Computer Science and Physics double major at UNC Chapel Hill with a passion for using computational tools to tackle challenges in the natural sciences. He's drawn to projects that merge programming with scientific researchâ€”Âwhether that's modeling complex systems or developing tools that make discovery more accessible. With experience leading robotics, math, and engineering initiatives, Osman values collaboration and creative problem-solving. Through the Natural Sciences Computing Club, he hopes to build a community where students from different disciplines can explore the intersection of computation and science, and work together on projects that make a real impact.
+                    Osman is a sophomore double-majoring in Physics and Computer Science and is the founder and co-president of NSCC. He specializes in computational physics, machine learning for image processing, and robotics. His primary expertise lies in computational methods for physical sciences, such as numerical simulation, computer vision, and nanotechnology. Osman applies scientific and mathematical logic to drive computational research and development at NSCC. In his free time, he enjoys foraging, gardening, and woodworking.
                 </div>
             </div>
             <div class="leader-image leader-image-right">
                 <span><img src="./ot.jpg" alt="Osman Taka"></span>
             </div>
         </div>
-        
+
         <div class="leader-section">
             <div class="leader-image leader-image-left">
                 <span><img src="./JC_photo.jpg" alt="John Christopher"></span>
