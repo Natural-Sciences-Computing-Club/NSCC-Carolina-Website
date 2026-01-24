@@ -1559,7 +1559,7 @@ function getLeadershipContent() {
                 <div class="leader-role">Co-President</div>
                 <div class="leader-name">William Keffer</div>
                 <div class="leader-description">
-                    William Keffer is a UNC-Chapel Hill student and the driving force behind the Natural Sciences Computing Club (NSCC), where he bridges natural sciences with modern computing through hands-on workshops, project sprints, and mentorship. He focuses on practical Python and Jupyter workflows, data visualization, and approachable machine learningâ€”Âhelping members turn curiosity into portfolio-ready projects that mix biology, physics, and earth science with code. With a sharp eye for design and user experience, William also shapes NSCC's brand and web presence, championing creative, high-quality visuals alongside clean, reproducible pipelines. Above all, he's building an inclusive, collaborative community that celebrates both scientific rigor and inventive, real-world problem-solving.
+                    William is a double major in Mathematics and Computer Science at UNC and serves as a founder and co-president of NSCC. He has contributed to projects across web development and experimental engineering, with a particular focus at NSCC on translating theoretical models into functional code.
                 </div>
             </div>
         </div>
