@@ -2,6 +2,9 @@
 const PHI = 1.618033988749;
 const PHI_INV = 0.618033988749;
 const FIBONACCI = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144];
+
+// Production debug flag - set to false to eliminate console overhead
+const DEBUG_MODE = false;
 // ============================================
 // DARK MODE THEME SYSTEM
 // ============================================
@@ -204,7 +207,8 @@ const imagePreloader = {
 
 const debug = document.getElementById('debug');
 function log(msg) {
-    if (debug.style.display !== 'none') {
+    if (!DEBUG_MODE) return;
+    if (debug && debug.style.display !== 'none') {
         debug.innerHTML = msg + '<br>' + debug.innerHTML;
     }
     console.log(msg);
@@ -325,38 +329,53 @@ class GoldenPanelPhysics {
     }
     
     setupDocumentHandlers() {
-        // Single mousemove handler for all panels
+        /* Mousemove drag handler throttled to requestAnimationFrame cadence.
+           Raw mousemove can fire 120+ times/sec on high-refresh displays,
+           but DOM updates are only visible at the display refresh rate (60fps).
+           This eliminates redundant style recalculations. */
+        this._pendingDragEvent = null;
+        this._dragRafId = null;
+        
         document.addEventListener('mousemove', (e) => {
             if (!this.draggedPanel) return;
             
-            const panelData = this.panels.get(this.draggedPanel);
-            if (!panelData || !panelData.isDragging) return;
-            
-            // Check if mouse moved significantly
+            // Check if mouse moved significantly (lightweight, no DOM access)
             const dx = e.clientX - this.dragState.mouseDownX;
             const dy = e.clientY - this.dragState.mouseDownY;
-            const distance = Math.sqrt(dx * dx + dy * dy);
-            
-            if (distance > 5) {
+            if (dx * dx + dy * dy > 25) { // 5*5, avoids Math.sqrt
                 this.dragState.hasMoved = true;
             }
             
-            const newX = e.clientX - this.dragState.offsetX;
-            const newY = e.clientY - this.dragState.offsetY;
+            // Store the latest event but defer DOM updates to rAF
+            this._pendingDragEvent = e;
             
-            this.dragState.velocityTracking.push({ 
-                x: newX - panelData.position.x, 
-                y: newY - panelData.position.y 
-            });
-            if (this.dragState.velocityTracking.length > 5) {
-                this.dragState.velocityTracking.shift();
+            if (!this._dragRafId) {
+                this._dragRafId = requestAnimationFrame(() => {
+                    this._dragRafId = null;
+                    const evt = this._pendingDragEvent;
+                    if (!evt || !this.draggedPanel) return;
+                    
+                    const panelData = this.panels.get(this.draggedPanel);
+                    if (!panelData || !panelData.isDragging) return;
+                    
+                    const newX = evt.clientX - this.dragState.offsetX;
+                    const newY = evt.clientY - this.dragState.offsetY;
+                    
+                    this.dragState.velocityTracking.push({ 
+                        x: newX - panelData.position.x, 
+                        y: newY - panelData.position.y 
+                    });
+                    if (this.dragState.velocityTracking.length > 5) {
+                        this.dragState.velocityTracking.shift();
+                    }
+                    
+                    panelData.position.x = newX;
+                    panelData.position.y = newY;
+                    
+                    const panel = panelData.element;
+                    panel.style.transform = `translate3d(${newX}px, ${newY}px, 0) rotateZ(${panelData.angle}deg)`;
+                });
             }
-            
-            panelData.position.x = newX;
-            panelData.position.y = newY;
-            
-            const panel = panelData.element;
-            panel.style.transform = `translate3d(${newX}px, ${newY}px, 0) rotateZ(${panelData.angle}deg)`;
         }, { passive: true });
         
         // Single mouseup handler for all panels
@@ -369,8 +388,7 @@ class GoldenPanelPhysics {
             
             const panel = panelData.element;
             
-            // Debug logging
-            console.log(`[${panelId}] mouseup fired, hasMoved: ${this.dragState.hasMoved}, isExpanded: ${isExpanded}, isCollapsing: ${isCollapsing}`);
+            if (DEBUG_MODE) console.log(`[${panelId}] mouseup fired, hasMoved: ${this.dragState.hasMoved}, isExpanded: ${isExpanded}, isCollapsing: ${isCollapsing}`);
             
             panel.classList.remove('dragging');
             panelData.isDragging = false;
@@ -380,7 +398,7 @@ class GoldenPanelPhysics {
             const isClick = !this.dragState.hasMoved && clickDuration < 200;
             
             if (isClick) {
-                console.log(`[${panelId}] Click detected! contentType: ${panel.dataset.contentType}`);
+                if (DEBUG_MODE) console.log(`[${panelId}] Click detected! contentType: ${panel.dataset.contentType}`);
                 // This was a click, trigger panel expansion
                 const contentType = panel.dataset.contentType;
                 if (contentType && !isExpanded && !isCollapsing) {
@@ -388,10 +406,10 @@ class GoldenPanelPhysics {
                     if (contentType === 'leadership') {
                         imagePreloader.preload();
                     }
-                    console.log(`[${panelId}] Calling expandPanel`);
+                    if (DEBUG_MODE) console.log(`[${panelId}] Calling expandPanel`);
                     expandPanel(panelId, contentType);
                 } else {
-                    console.log(`[${panelId}] Click blocked - isExpanded: ${isExpanded}, isCollapsing: ${isCollapsing}`);
+                    if (DEBUG_MODE) console.log(`[${panelId}] Click blocked - isExpanded: ${isExpanded}, isCollapsing: ${isCollapsing}`);
                 }
             } else {
                 // This was a drag, apply physics
@@ -468,7 +486,7 @@ class GoldenPanelPhysics {
             panel.style.left = '0px';
             panel.style.top = '0px';
             panel.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-            panel.style.willChange = 'transform';
+            // will-change already set in CSS, no need to duplicate via JS
             
             this.addPanelListeners(panel);
         });
@@ -513,8 +531,7 @@ class GoldenPanelPhysics {
                 }, 200);
             }
             
-            // Debug logging
-            console.log(`[${panel.id}] mousedown fired, isDragging was: ${panelData.isDragging}, isExpanded: ${isExpanded}, isCollapsing: ${isCollapsing}`);
+            if (DEBUG_MODE) console.log(`[${panel.id}] mousedown fired, isDragging was: ${panelData.isDragging}, isExpanded: ${isExpanded}, isCollapsing: ${isCollapsing}`);
             
             // Record mouse down time and position for click detection
             this.dragState.mouseDownTime = Date.now();
@@ -603,6 +620,13 @@ class GoldenPanelPhysics {
     }
     
     checkCollisionsDuringPhysics() {
+        // Early exit: skip O(n²) collision checks when all panels are settled
+        let anyMoving = false;
+        for (const panelData of this.panels.values()) {
+            if (panelData.isMoving || panelData.isDragging) { anyMoving = true; break; }
+        }
+        if (!anyMoving) return;
+        
         const panelArray = Array.from(this.panels.values());
         const panelWidth = window.innerWidth * 0.15;
         const panelHeight = window.innerHeight * 0.30;
@@ -840,14 +864,14 @@ class DataStreamController {
     }
 }
 
-// Three.js Initialization - Optimized loading check
+// Three.js Initialization — uses onload signal from <script> tag to avoid polling.
+// Falls back to setTimeout polling if the signal didn't fire yet.
 function checkThreeJS() {
     if (typeof THREE !== 'undefined') {
         log('Three.js loaded successfully');
-        // Use requestAnimationFrame for smoother initialization
         requestAnimationFrame(() => init());
-    } else {
-        log('Waiting for Three.js...');
+    } else if (!window.__threeLoaded) {
+        // Three.js script hasn't loaded yet — wait briefly and retry
         setTimeout(checkThreeJS, 100);
     }
 }
@@ -876,10 +900,13 @@ function init() {
             antialias: window.devicePixelRatio === 1,
             powerPreference: "high-performance",
             stencil: false,
-            depth: true
+            depth: true,
+            // Disable logarithmic depth buffer - not needed for this scene
+            logarithmicDepthBuffer: false
         });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        // Cap at 1.5x for better performance on high-DPI without visible quality loss
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
         
         renderer.shadowMap.enabled = false;
         renderer.sortObjects = true;
@@ -893,6 +920,10 @@ function init() {
         const dirLight = new THREE.DirectionalLight(0x7ec8e3, 1);
         dirLight.position.set(PHI * 5, PHI * 5, PHI * 5);
         scene.add(dirLight);
+        
+        // Store light references for direct access on theme change
+        // (avoids scene.traverse() which visits every object in the scene graph)
+        window._sceneLights = { ambient: ambientLight, directional: dirLight };
         
         log('Lighting added');
         
@@ -980,7 +1011,7 @@ function createGoldenStructures() {
                 shader.fragmentShader = shader.fragmentShader.replace(
                     '#include <color_fragment>',
                     `#include <color_fragment>
-                    vec3 viewDirection = normalize(cameraPosition - vWorldPosition.xyz);
+                    vec3 viewDirection = normalize(-vViewPosition);
                     float fresnel = 1.0 - abs(dot(viewDirection, vWorldNormal));
                     
                     vec3 iridescentColor = vec3(
@@ -1119,16 +1150,14 @@ function createGoldenStructures() {
         perfMonitor.objectCount++;
     }
     
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
-    scene.add(ambientLight);
-    
-    const directionalLight = new THREE.DirectionalLight(0x7ec8e3, 1);
-    directionalLight.position.set(30, 30, 30);
-    scene.add(directionalLight);
-    
+    /* Duplicate ambient/directional lights removed - already created in init().
+       Only adding the secondary point light that was unique to this function. */
     const secondaryLight = new THREE.PointLight(0xa8d5e8, 0.8, 100);
     secondaryLight.position.set(-30, -30, 30);
     scene.add(secondaryLight);
+    
+    // Add to cached light references
+    if (window._sceneLights) window._sceneLights.point = secondaryLight;
     
     log(`Created ${structures.length} structures`);
 }
@@ -1152,27 +1181,18 @@ function updateStructureMaterials(isDark) {
         }
     });
     
-    // Update lights for theme
-    if (scene) {
-        scene.traverse((child) => {
-            if (child.isLight) {
-                if (child.type === 'DirectionalLight') {
-                    child.color.setHex(isDark ? 0x7b6fff : 0x7ec8e3);
-                } else if (child.type === 'PointLight') {
-                    child.color.setHex(isDark ? 0x9482ff : 0xa8d5e8);
-                }
-            }
-        });
+    // Update lights via direct references (avoids scene.traverse over all objects)
+    if (window._sceneLights) {
+        const lights = window._sceneLights;
+        if (lights.directional) lights.directional.color.setHex(isDark ? 0x7b6fff : 0x7ec8e3);
+        if (lights.point) lights.point.color.setHex(isDark ? 0x9482ff : 0xa8d5e8);
     }
 }
 
 function onMouseMove(event) {
     mouseX = (event.clientX / window.innerWidth) * 2 - 1;
     mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
-    
-    const cursor = document.getElementById('chromeCursor');
-    cursor.style.left = event.clientX + 'px';
-    cursor.style.top = event.clientY + 'px';
+    // Custom cursor tracking removed - using default system cursor
 }
 
 // Debounced resize handler for better performance
@@ -1194,7 +1214,36 @@ function onWindowResize() {
     }, 100);
 }
 
+// Pre-compute constants used in animation loop to avoid per-frame allocations
+const PHI_INV_01 = PHI_INV * 0.1;
+const PHI_INV_02 = PHI_INV * 0.2;
+const PHI_INV_008 = PHI_INV * 0.08;
+const PHI_INV_005 = PHI_INV * 0.05;
+const PHI_2 = PHI * 2;
+const PHI_30 = PHI * 30;
+const PHI_3 = PHI * 3;
+const ORIGIN = new THREE.Vector3(0, 0, 0);
+
+let animFrameCount = 0;
+let animationRunning = true;
+
+/* Page Visibility API — completely stop the animation loop when the tab is hidden.
+   This saves 100% of CPU/GPU while the page isn't visible. */
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+        animationRunning = false;
+    } else {
+        if (!animationRunning) {
+            animationRunning = true;
+            // Reset clock to avoid large deltaTime spike after resuming
+            if (clock) clock.getDelta();
+            animate();
+        }
+    }
+});
+
 function animate() {
+    if (!animationRunning) return;
     requestAnimationFrame(animate);
     
     const deltaTime = clock.getDelta();
@@ -1210,10 +1259,15 @@ function animate() {
         panelPhysics.update(deltaTime);
     }
     
-    const rotationSpeedX = deltaTime * PHI_INV * 0.1;
-    const rotationSpeedY = deltaTime * PHI_INV * 0.2;
+    const rotationSpeedX = deltaTime * PHI_INV_01;
+    const rotationSpeedY = deltaTime * PHI_INV_02;
+    const structLen = structures.length;
     
-    for (let i = 0; i < structures.length; i++) {
+    // Update shader time less frequently (every 3rd frame instead of complex modulo)
+    animFrameCount++;
+    const updateShader = (animFrameCount % 3 === 0);
+    
+    for (let i = 0; i < structLen; i++) {
         const structure = structures[i];
         
         if (!structure.visible) continue;
@@ -1221,21 +1275,21 @@ function animate() {
         structure.rotation.x += rotationSpeedX * (1 + i * 0.1);
         structure.rotation.y += rotationSpeedY * (1 + i * 0.05);
         
-        if (structure.userData.isIridescent && 
-            structure.material.userData.shader && 
-            Math.floor(time * 60) % 3 === 0) {
+        if (updateShader && 
+            structure.userData.isIridescent && 
+            structure.material.userData.shader) {
             structure.material.userData.shader.uniforms.time.value = time;
         }
     }
     
-    const camTime1 = time * PHI_INV * 0.1;
-    const camTime2 = time * PHI_INV * 0.08;
-    const camTime3 = time * PHI_INV * 0.05;
+    const camTime1 = time * PHI_INV_01;
+    const camTime2 = time * PHI_INV_008;
+    const camTime3 = time * PHI_INV_005;
     
-    camera.position.x = Math.sin(camTime1) * PHI * 2;
+    camera.position.x = Math.sin(camTime1) * PHI_2;
     camera.position.y = Math.cos(camTime2) * PHI + 2;
-    camera.position.z = PHI * 30 + Math.sin(camTime3) * PHI * 3;
-    camera.lookAt(0, 0, 0);
+    camera.position.z = PHI_30 + Math.sin(camTime3) * PHI_3;
+    camera.lookAt(ORIGIN);
     
     renderer.render(scene, camera);
 }
@@ -1247,61 +1301,40 @@ function createNeuralNetwork() {
     
     const fragment = document.createDocumentFragment();
     
-    elements.forEach((element, index) => {
+    // Pre-compute constant values
+    const nodeSize = FIBONACCI[3] * 2;
+    const pulseTime = PHI * 2;
+    const glowSize = FIBONACCI[5];
+    const strandDuration = FIBONACCI[5];
+    const strandThreshold = PHI_INV * 1.2;
+    const strandGradStop1 = PHI_INV * 30;
+    const strandGradStop2 = (1 - PHI_INV * 0.3) * 100;
+    const strandOpacity = PHI_INV * 0.5;
+    
+    elements.forEach((element) => {
         const rect = element.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        
         const node = document.createElement('div');
         node.className = 'neural-node';
-        node.style.cssText = `
-            position: absolute;
-            width: ${FIBONACCI[3] * 2}px;
-            height: ${FIBONACCI[3] * 2}px;
-            left: ${rect.left + rect.width / 2}px;
-            top: ${rect.top + rect.height / 2}px;
-            background: radial-gradient(circle, var(--accent-cyan), transparent);
-            border-radius: 50%;
-            box-shadow: 0 0 ${FIBONACCI[5]}px rgba(126,200,227,0.5);
-            animation: pulse ${PHI * 2}s infinite;
-            will-change: transform;
-            transform: translateZ(0);
-        `;
+        node.style.cssText = `position:absolute;width:${nodeSize}px;height:${nodeSize}px;left:${cx}px;top:${cy}px;background:radial-gradient(circle,var(--accent-cyan),transparent);border-radius:50%;box-shadow:0 0 ${glowSize}px rgba(126,200,227,0.5);animation:pulse ${pulseTime}s infinite;transform:translateZ(0)`;
         fragment.appendChild(node);
-        nodes.push({
-            element: node,
-            x: rect.left + rect.width / 2,
-            y: rect.top + rect.height / 2
-        });
+        nodes.push({ x: cx, y: cy });
     });
     
-    for(let i = 0; i < nodes.length; i++) {
-        for(let j = i + 1; j < nodes.length; j++) {
-            if(Math.random() > PHI_INV * 1.2) {
-                const strand = document.createElement('div');
-                strand.className = 'neural-strand';
-                
+    const nodeLen = nodes.length;
+    for (let i = 0; i < nodeLen; i++) {
+        for (let j = i + 1; j < nodeLen; j++) {
+            if (Math.random() > strandThreshold) {
                 const dx = nodes[j].x - nodes[i].x;
                 const dy = nodes[j].y - nodes[i].y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
                 const angle = Math.atan2(dy, dx) * 180 / Math.PI;
                 
-                strand.style.cssText = `
-                    position: absolute;
-                    height: 1px;
-                    background: linear-gradient(90deg, 
-                        transparent, 
-                        var(--accent-cyan) ${PHI_INV * 30}%, 
-                        var(--accent-cyan) ${(1 - PHI_INV * 0.3) * 100}%, 
-                        transparent);
-                    width: ${distance}px;
-                    left: ${nodes[i].x}px;
-                    top: ${nodes[i].y}px;
-                    transform: rotate(${angle}deg);
-                    transform-origin: 0 50%;
-                    opacity: ${PHI_INV * 0.5};
-                    animation: neural-pulse ${FIBONACCI[5]}s infinite;
-                    animation-delay: ${Math.random() * FIBONACCI[5]}s;
-                    will-change: opacity;
-                `;
-                
+                const strand = document.createElement('div');
+                strand.className = 'neural-strand';
+                strand.style.cssText = `position:absolute;height:1px;background:linear-gradient(90deg,transparent,var(--accent-cyan) ${strandGradStop1}%,var(--accent-cyan) ${strandGradStop2}%,transparent);width:${distance}px;left:${nodes[i].x}px;top:${nodes[i].y}px;transform:rotate(${angle}deg);transform-origin:0 50%;opacity:${strandOpacity};animation:neural-pulse ${strandDuration}s infinite;animation-delay:${Math.random() * strandDuration}s`;
                 fragment.appendChild(strand);
             }
         }
@@ -1323,7 +1356,7 @@ function expandPanel(panelId, contentType) {
     isExpanded = true;
     currentExpandedPanel = panelId;
     
-    console.log(`[expandPanel] Opening panel: ${panelId}`);
+    if (DEBUG_MODE) console.log(`[expandPanel] Opening panel: ${panelId}`);
     
     const panel = document.getElementById(panelId);
     const expandedOverlay = document.getElementById('expandedOverlay');
@@ -1337,39 +1370,37 @@ function expandPanel(panelId, contentType) {
     const panelRect = panel.getBoundingClientRect();
     const panelData = panelPhysics.panels.get(panelId);
     
-    // Set initial position to match the panel
-    expandedContainer.style.left = panelRect.left + 'px';
-    expandedContainer.style.top = panelRect.top + 'px';
-    expandedContainer.style.width = panelRect.width + 'px';
-    expandedContainer.style.height = panelRect.height + 'px';
-    expandedContainer.style.opacity = '1';
-    
-    // Disable physics for the expanding panel using a separate flag
+    // Disable physics for the expanding panel
     if (panelData) {
-        panelData.physicsDisabled = true; // Use a separate flag instead of isDragging
-        console.log(`[expandPanel] Set physicsDisabled=true for ${panelId}`);
+        panelData.physicsDisabled = true;
+        if (DEBUG_MODE) console.log(`[expandPanel] Set physicsDisabled=true for ${panelId}`);
     }
     
     // Load content based on type
     loadContent(contentType, expandedContent);
     
     // Start the expansion animation
-    expandedOverlay.style.pointerEvents = '';  // Clear any stuck pointer-events
+    expandedOverlay.style.pointerEvents = '';
     expandedOverlay.classList.add('active');
     
-    // Reset container position and pointer-events in case it's stuck off-screen
+    // Reset container: clear transitions and classes, position at the clicked panel.
+    // The offsetHeight read forces a synchronous style commit so the browser registers
+    // the panel position BEFORE transitions are enabled. Without this, the browser
+    // batches the position set + transition enable and the container animates from
+    // its previous off-screen position (-9999px) instead of from the panel's position.
     expandedContainer.style.pointerEvents = '';
-    // IMPORTANT: Reset position from potential off-screen location
-    if (expandedContainer.style.left === '-9999px') {
-        expandedContainer.style.left = panelRect.left + 'px';
-        expandedContainer.style.top = panelRect.top + 'px';
-        console.log('[expandPanel] Reset container from off-screen position');
-    }
+    expandedContainer.classList.remove('morphing', 'expanded');
+    expandedContainer.style.left = panelRect.left + 'px';
+    expandedContainer.style.top = panelRect.top + 'px';
+    expandedContainer.style.width = panelRect.width + 'px';
+    expandedContainer.style.height = panelRect.height + 'px';
+    expandedContainer.style.opacity = '1';
     
-    // Force a reflow to ensure initial styles are applied
-    expandedContainer.offsetHeight;
+    // Force synchronous style commit so the browser registers the panel position
+    // before transitions are enabled. This is the correct use of forced reflow.
+    void expandedContainer.offsetHeight;
     
-    // Add morphing class and expanded state
+    // Now enable transitions and trigger the expansion
     expandedContainer.classList.add('morphing');
     requestAnimationFrame(() => {
         expandedContainer.classList.add('expanded');
@@ -1385,14 +1416,14 @@ function expandPanel(panelId, contentType) {
     document.querySelectorAll('.nav-panel').forEach(p => {
         p.style.pointerEvents = 'none';
     });
-    console.log(`[expandPanel] Set pointer-events=none on all panels`);
+    if (DEBUG_MODE) console.log(`[expandPanel] Set pointer-events=none on all panels`);
 }
 
 function collapsePanel() {
     if (!isExpanded || isCollapsing) return;  // Prevent multiple concurrent collapses
     isCollapsing = true;  // Set flag to prevent concurrent operations
     
-    console.log(`[collapsePanel] Starting collapse of panel: ${currentExpandedPanel}`);
+    if (DEBUG_MODE) console.log(`[collapsePanel] Starting collapse of panel: ${currentExpandedPanel}`);
     
     const expandedOverlay = document.getElementById('expandedOverlay');
     const expandedContainer = document.getElementById('expandedContainer');
@@ -1426,7 +1457,7 @@ function collapsePanel() {
         });
         // Also clear the draggedPanel if it's stuck
         panelPhysics.draggedPanel = null;
-        console.log('[collapsePanel] Cleared stuck dragging states');
+        if (DEBUG_MODE) console.log('[collapsePanel] Cleared stuck dragging states');
     }
     
     // Get panel's current position for morphing back
@@ -1447,7 +1478,7 @@ function collapsePanel() {
         
         // Show the original panel with fade transition
         panel.classList.remove('hidden');
-        console.log(`[collapsePanel] Removed hidden class from ${collapsedPanelId}`);
+        if (DEBUG_MODE) console.log(`[collapsePanel] Removed hidden class from ${collapsedPanelId}`);
         
         // Immediately restore pointer-events for all panels after animation starts
         // This ensures panels become clickable right away, not after the 800ms delay
@@ -1456,7 +1487,7 @@ function collapsePanel() {
                 // Clear inline pointer-events style to restore interactivity
                 p.style.pointerEvents = '';
             });
-            console.log('[collapsePanel] Cleared pointer-events on all panels (50ms)');
+            if (DEBUG_MODE) console.log('[collapsePanel] Cleared pointer-events on all panels (50ms)');
         }, 50); // Small delay to ensure animation has started
     });
     
@@ -1471,32 +1502,32 @@ function collapsePanel() {
         expandedContainer.style.pointerEvents = 'none';
         expandedContainer.style.left = '-9999px';
         expandedContainer.style.top = '-9999px';
-        console.log('[collapsePanel] Moved expanded container off-screen and disabled pointer events');
+        if (DEBUG_MODE) console.log('[collapsePanel] Moved expanded container off-screen and disabled pointer events');
         
         // Re-enable physics for the panel using stored ID
         const panelData = panelPhysics.panels.get(collapsedPanelId);
         if (panelData) {
             panelData.physicsDisabled = false;  // Clear the physics disabled flag
             panelData.isDragging = false;  // Also ensure isDragging is false
-            console.log(`[collapsePanel] Set physicsDisabled=false and isDragging=false for ${collapsedPanelId}`);
+            if (DEBUG_MODE) console.log(`[collapsePanel] Set physicsDisabled=false and isDragging=false for ${collapsedPanelId}`);
         }
         
         isExpanded = false;
         isCollapsing = false;  // Clear the collapsing flag
         currentExpandedPanel = null;
-        console.log('[collapsePanel] Collapse complete - all flags cleared');
+        if (DEBUG_MODE) console.log('[collapsePanel] Collapse complete - all flags cleared');
     }, 800); // Match animation duration
 }
 
 function fadeOutElements() {
     // Fade out title, subtitle, and other panels
-    console.log('[fadeOutElements] Hiding panels except:', currentExpandedPanel);
+    if (DEBUG_MODE) console.log('[fadeOutElements] Hiding panels except:', currentExpandedPanel);
     document.getElementById('siteTitle').classList.add('hidden');
     document.getElementById('siteSubtitle').classList.add('hidden');
 
     document.querySelectorAll('.nav-panel').forEach(panel => {
         if (panel.id !== currentExpandedPanel) {
-            console.log('[fadeOutElements] Added hidden to ' + panel.id + ', classes:', panel.className);
+            if (DEBUG_MODE) console.log('[fadeOutElements] Added hidden to ' + panel.id + ', classes:', panel.className);
             panel.classList.add('hidden');
         }
     });
@@ -1507,7 +1538,7 @@ function fadeInElements() {
     document.getElementById('siteTitle').classList.remove('hidden');
     document.getElementById('siteSubtitle').classList.remove('hidden');
 
-    console.log('[fadeInElements] Starting to restore panels');
+    if (DEBUG_MODE) console.log('[fadeInElements] Starting to restore panels');
     document.querySelectorAll('.nav-panel').forEach(panel => {
         // Clear any inline opacity and pointer-events styles
         panel.style.opacity = '';
@@ -1518,7 +1549,7 @@ function fadeInElements() {
         const panelData = panelPhysics.panels.get(panel.id);
         if (panelData) {
             // Don't modify isDragging here as it might be legitimately set by mouse interaction
-            console.log(`[fadeInElements] Panel ${panel.id} - hidden removed, pointer-events cleared`);
+            if (DEBUG_MODE) console.log(`[fadeInElements] Panel ${panel.id} - hidden removed, pointer-events cleared`);
         }
     });
 }
@@ -1553,7 +1584,7 @@ function getLeadershipContent() {
         
         <div class="leader-section">
             <div class="leader-image leader-image-left">
-                <span><img src="./wk.jpg" alt="William Keffer"></span>
+                <span><img src="./wk.jpg" alt="William Keffer" loading="lazy" decoding="async"></span>
             </div>
             <div class="leader-info leader-info-left">
                 <div class="leader-role">Co-President</div>
@@ -1573,13 +1604,13 @@ function getLeadershipContent() {
                 </div>
             </div>
             <div class="leader-image leader-image-right">
-                <span><img src="./ot.jpg" alt="Osman Taka"></span>
+                <span><img src="./ot.jpg" alt="Osman Taka" loading="lazy" decoding="async"></span>
             </div>
         </div>
 
         <div class="leader-section">
             <div class="leader-image leader-image-left">
-                <span><img src="./JC_photo.jpg" alt="John Christopher"></span>
+                <span><img src="./JC_photo.jpg" alt="John Christopher" loading="lazy" decoding="async"></span>
             </div>
             <div class="leader-info leader-info-left">
                 <div class="leader-role">Treasurer</div>
@@ -1621,7 +1652,7 @@ function getProjectsContent() {
                 justify-content: center;
                 border-bottom: 1px solid var(--glass-border);
             ">
-                <img src="./kuramoto.png" alt="Kuramoto Neural Synchronization Simulator" style="
+                <img src="./kuramoto.png" alt="Kuramoto Neural Synchronization Simulator" loading="lazy" decoding="async" style="
                     width: 100%;
                     height: 100%;
                     object-fit: cover;
@@ -1938,39 +1969,28 @@ async function renderCalendar() {
         daysHTML += `<div style="aspect-ratio: 1;"></div>`;
     }
 
-    // Day cells
+    // Day cells - using CSS classes instead of inline event handlers for better performance
     for (let day = 1; day <= daysInMonth; day++) {
         const isToday = isCurrentMonth && day === currentDay;
         const dayEvents = getEventsForDay(day);
         const hasEvents = dayEvents.length > 0;
 
         daysHTML += `
-            <div class="calendar-day" onclick="showEventDetails(${day})" style="
+            <div class="calendar-day${isToday ? ' today' : ''}" onclick="showEventDetails(${day})" style="
                 aspect-ratio: 1;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
-                background: ${isToday ? 'linear-gradient(135deg, rgba(126,200,227,0.3), rgba(126,200,227,0.2))' : 'rgba(255,255,255,0.05)'};
+                background: ${isToday ? '' : 'rgba(255,255,255,0.05)'};
                 border: 1px solid ${isToday ? 'var(--accent-cyan)' : 'var(--glass-border)'};
                 border-radius: 10px;
                 color: var(--text-dark);
                 font-size: 14px;
-                cursor: pointer;
-                transition: all 0.3s;
-                backdrop-filter: blur(10px);
                 position: relative;
-            " onmouseover="this.style.background='linear-gradient(135deg, rgba(126,200,227,0.2), rgba(126,200,227,0.1))'; this.style.transform='scale(1.05)';"
-               onmouseout="this.style.background='${isToday ? 'linear-gradient(135deg, rgba(126,200,227,0.3), rgba(126,200,227,0.2))' : 'rgba(255,255,255,0.05)'}'; this.style.transform='scale(1)';">
+            ">
                 ${day}
-                ${hasEvents ? `<div style="
-                    width: 6px;
-                    height: 6px;
-                    background: var(--accent-cyan);
-                    border-radius: 50%;
-                    margin-top: 4px;
-                    box-shadow: 0 0 6px var(--accent-cyan);
-                "></div>` : ''}
+                ${hasEvents ? `<div style="width:6px;height:6px;background:var(--accent-cyan);border-radius:50%;margin-top:4px;box-shadow:0 0 6px var(--accent-cyan)"></div>` : ''}
             </div>
         `;
     }
@@ -2098,7 +2118,7 @@ function getJoinContent() {
 
 // Debug function to reset all panel states - can be called from console
 window.resetPanelStates = function() {
-    console.log('[DEBUG] Resetting all panel states...');
+    if (DEBUG_MODE) console.log('[DEBUG] Resetting all panel states...');
     
     // Reset global flags
     isExpanded = false;
@@ -2140,7 +2160,7 @@ window.resetPanelStates = function() {
         expandedContainer.style.top = '-9999px';
     }
     
-    console.log('[DEBUG] All panel states reset complete');
+    if (DEBUG_MODE) console.log('[DEBUG] All panel states reset complete');
 };
 
 // Initialize on load with optimized DOM ready check

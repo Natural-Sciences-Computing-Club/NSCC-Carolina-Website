@@ -103,11 +103,7 @@ const MobileHandler = {
             window.animationFrameId = null;
         }
         
-        // Hide cursor
-        const cursor = document.getElementById('chromeCursor');
-        if (cursor) {
-            cursor.style.display = 'none';
-        }
+        // Custom cursor already hidden via CSS (display: none)
     },
     
     // Disable mobile portrait mode
@@ -132,11 +128,7 @@ const MobileHandler = {
             animate();
         }
         
-        // Show cursor
-        const cursor = document.getElementById('chromeCursor');
-        if (cursor) {
-            cursor.style.display = '';
-        }
+        // Custom cursor already hidden via CSS (display: none)
     },
     
     // Setup panel click functionality for mobile - use desktop expandPanel

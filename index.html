@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>NSCC - Natural Sciences Computing Club</title>
-    <link rel="icon" type="image/jpeg" href="./logo.jpg">
+    <meta name="description" content="Natural Sciences Computing Club at UNC - bridging computational training with scientific problem-solving through workshops, projects, and peer mentorship.">
+    <link rel="icon" type="image/png" href="./logo.jpg">
     
     <!-- Preconnect to external domains for faster connection -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,13 +16,13 @@
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400&display=swap"></noscript>
     
-    <!-- Preload Three.js for faster loading -->
-    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" as="script">
+    <!-- Three.js preload removed — defer already starts download early without
+         competing for bandwidth with critical CSS/fonts -->
     
     <!-- Critical CSS inlined to prevent render blocking -->
     <style>
         /* Critical above-the-fold styles only */
-        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
             font-family: 'Inter', sans-serif;
             background: linear-gradient(180deg, #f0f0f0 0%, #e1eff8 50%, #d1e3f0 100%);
@@ -101,10 +102,7 @@
     <link rel="preload" href="styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="styles.css"></noscript>
     
-    <!-- Inline script for critical CSS loading -->
-    <script>
-        !function(e){"use strict";var t=function(t,n,r,o){var i=e.document,a=i.createElement("link");if(n)var d=n;else{var l=(i.body||i.getElementsByTagName("head")[0]).childNodes;d=l[l.length-1]}var s=i.styleSheets;if(o)for(var u in o)o.hasOwnProperty(u)&&a.setAttribute(u,o[u]);a.rel="stylesheet",a.href=t,a.media="only x",function e(t){if(i.body)return t();setTimeout(function(){e(t)})}(function(){d.parentNode.insertBefore(a,n?d:d.nextSibling)});var f=function(e){for(var t=a.href,n=s.length;n--;)if(s[n].href===t)return e();setTimeout(function(){f(e)})};function c(){a.addEventListener&&a.removeEventListener("load",c),a.media=r||"all"}return a.addEventListener&&a.addEventListener("load",c),a.onloadcssdefined=f,f(c),a};"undefined"!=typeof exports?exports.loadCSS=t:e.loadCSS=t}("undefined"!=typeof global?global:this);
-    </script>
+    <!-- loadCSS polyfill removed - all modern browsers support rel="preload" -->
 </head>
 <body>
     <!-- Debug Panel -->
@@ -332,8 +330,8 @@
         </div>
     </div>
     
-    <!-- Load Three.js with defer for non-blocking -->
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Load Three.js with defer + onload signal to eliminate polling -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" onload="window.__threeLoaded=true"></script>
     
     <!-- Load main script with defer -->
     <script defer src="script.js"></script>
