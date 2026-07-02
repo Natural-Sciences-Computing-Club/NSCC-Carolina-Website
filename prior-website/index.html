@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>NSCC - Natural Sciences Computing Club</title>
+    <meta name="description" content="Natural Sciences Computing Club at UNC - bridging computational training with scientific problem-solving through workshops, projects, and peer mentorship.">
+    <link rel="icon" type="image/png" href="./logo.jpg">
+    
+    <!-- Preconnect to external domains for faster connection -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    
+    <!-- Preload critical font with display swap for faster text rendering -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400&display=swap"></noscript>
+    
+    <!-- Three.js preload removed — defer already starts download early without
+         competing for bandwidth with critical CSS/fonts -->
+    
+    <!-- Critical CSS inlined to prevent render blocking -->
+    <style>
+        /* Critical above-the-fold styles only */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(180deg, #f0f0f0 0%, #e1eff8 50%, #d1e3f0 100%);
+            overflow: hidden;
+            height: 100vh;
+            position: relative;
+        }
+        /* Dark mode critical styles */
+        body[data-theme="dark"] {
+            background: linear-gradient(180deg, #0a0b0f 0%, #12141a 50%, #1a1c24 100%);
+        }
+        #debug { display: block; }
+        
+        /* CRITICAL FIX: Hide elements before JS positions them - prevents FOUC */
+        .js-positioned {
+            visibility: hidden !important;
+            opacity: 0 !important;
+        }
+    </style>
+    
+    <!-- Early theme detection to prevent flash of incorrect theme -->
+    <script>
+        (function() {
+            // Add no-transitions class to prevent flash
+            document.documentElement.classList.add('no-transitions');
+            
+            // Immediately apply theme based on system preference or saved preference
+            var hasVisited = localStorage.getItem('nscc-has-visited');
+            var savedTheme = localStorage.getItem('nscc-theme');
+            var userHasSetTheme = localStorage.getItem('nscc-theme-manually-set') === 'true';
+            var theme = 'light'; // Default theme
+            
+            // Try to detect system preference
+            if (!hasVisited) {
+                // First-time visitor - use system preference
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    theme = 'dark';
+                }
+            } else if (userHasSetTheme && savedTheme) {
+                // User has manually set a preference
+                theme = savedTheme;
+            } else {
+                // Follow system preference or use saved theme
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    theme = 'dark';
+                } else if (savedTheme) {
+                    theme = savedTheme;
+                }
+            }
+            
+            // Apply theme immediately
+            document.documentElement.setAttribute('data-theme', theme);
+            if (document.body) {
+                document.body.setAttribute('data-theme', theme);
+                document.body.classList.add('no-transitions');
+            }
+            
+            // Set meta theme-color
+            var meta = document.createElement('meta');
+            meta.name = 'theme-color';
+            meta.content = theme === 'dark' ? '#0a0b0f' : '#f0f0f0';
+            document.head.appendChild(meta);
+            
+            // Remove no-transitions class after page loads
+            window.addEventListener('load', function() {
+                setTimeout(function() {
+                    document.documentElement.classList.remove('no-transitions');
+                    if (document.body) {
+                        document.body.classList.remove('no-transitions');
+                    }
+                }, 100);
+            });
+        })();
+    </script>
+    
+    <!-- Load main stylesheet asynchronously -->
+    <link rel="preload" href="styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="styles.css"></noscript>
+    
+    <!-- loadCSS polyfill removed - all modern browsers support rel="preload" -->
+</head>
+<body>
+    <!-- Debug Panel -->
+    <div id="debug">Loading Three.js...</div>
+    
+    <!-- Design Grid (for development) -->
+    <div class="design-grid">
+        <div class="golden-point primary"></div>
+        <div class="golden-point secondary"></div>
+        <div class="golden-point tertiary"></div>
+        <div class="golden-point quaternary"></div>
+    </div>
+    
+    <!-- Expanded Container Overlay -->
+    <div class="expanded-overlay" id="expandedOverlay">
+        <div class="expanded-container" id="expandedContainer">
+            <div class="expanded-glass-container">
+                <div class="expanded-glass-layer expanded-glass-base"></div>
+                <div class="expanded-glass-layer panel-glass-gloss"></div>
+                <div class="expanded-glass-layer panel-glass-reflection"></div>
+                <div class="expanded-glass-layer panel-glass-refraction"></div>
+                <div class="expanded-glass-layer panel-glass-caustics"></div>
+                <div class="expanded-glass-layer panel-glass-bands"></div>
+                <button class="close-btn" id="closeBtn" onclick="collapsePanel()">&times;</button>
+                <div class="expanded-content" id="expandedContent">
+                    <!-- Content will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Chrome Grid Floor -->
+    <div class="chrome-grid"></div>
+    
+    <!-- Organic Nebula Background -->
+    <div class="organic-nebula">
+        <div class="nebula-blob blob-primary"></div>
+        <div class="nebula-blob blob-secondary"></div>
+        <div class="nebula-blob blob-tertiary"></div>
+        <div class="nebula-blob blob-accent-1"></div>
+        <div class="nebula-blob blob-accent-2"></div>
+    </div>
+    
+    <!-- Three.js Canvas -->
+    <canvas id="three-canvas"></canvas>
+    
+    <!-- Deformation Ripple Effect -->
+    <div class="deformation-ripple" id="deformationRipple"></div>
+    
+    <!-- Glitch Effect Overlay -->
+    <div class="glitch-effect" id="glitchEffect"></div>
+    
+    <!-- Chrome Cursor -->
+    <div class="chrome-cursor" id="chromeCursor">
+        <div class="cursor-core"></div>
+        <div class="cursor-ring"></div>
+    </div>
+    
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+        <span class="theme-toggle-label">Toggle dark mode</span>
+        <div class="theme-toggle-container">
+            <div class="theme-toggle-icon">
+                <div class="sun-icon">
+                    <div class="sun-rays">
+                        <div class="sun-ray-1"></div>
+                        <div class="sun-ray-2"></div>
+                        <div class="sun-ray-3"></div>
+                    </div>
+                </div>
+                <div class="moon-icon"></div>
+                <div class="moon-stars">
+                    <span class="star star-1"></span>
+                    <span class="star star-2"></span>
+                    <span class="star star-3"></span>
+                    <span class="star star-4"></span>
+                </div>
+            </div>
+        </div>
+    </button>
+    
+    <!-- Neural Network -->
+    <div class="neural-network" id="neuralNetwork"></div>
+    
+    <!-- Cyberspace Container -->
+    <div class="cyberspace" id="cyberspace">
+        
+        <!-- Chrome Title -->
+        <h1 class="chrome-title fade-element js-positioned" id="siteTitle">NSCC</h1>
+        <p class="subtitle fade-element js-positioned" id="siteSubtitle">Natural Sciences Computing Club</p>
+        
+        <!-- Primary Dodecahedron Cluster -->
+        <div class="shape-cluster cluster-primary">
+            <div class="dodecahedron">
+                <div class="dodeca-face glass-layer-1" style="transform: rotateY(0deg) translateZ(100px);"></div>
+                <div class="dodeca-face glass-layer-2" style="transform: rotateY(72deg) translateZ(100px);"></div>
+                <div class="dodeca-face glass-layer-1" style="transform: rotateY(144deg) translateZ(100px);"></div>
+            </div>
+        </div>
+        
+        <!-- Secondary Icosahedron Cluster -->
+        <div class="shape-cluster cluster-secondary">
+            <div class="icosahedron">
+                <div class="ico-face" style="transform: rotateX(0deg) rotateY(0deg) translateZ(75px);"></div>
+                <div class="ico-face" style="transform: rotateX(60deg) rotateY(0deg) translateZ(75px);"></div>
+                <div class="ico-face" style="transform: rotateX(120deg) rotateY(0deg) translateZ(75px);"></div>
+            </div>
+        </div>
+        
+        <!-- Tertiary Torus Cluster -->
+        <div class="shape-cluster cluster-tertiary">
+            <div class="torus"></div>
+        </div>
+        
+        <!-- Quaternary Octahedron Cluster -->
+        <div class="shape-cluster cluster-quaternary">
+            <div class="octahedron">
+                <div class="octa-face glass-layer-2" style="transform: rotateY(0deg) rotateX(35deg) translateZ(50px);"></div>
+                <div class="octa-face glass-layer-1" style="transform: rotateY(90deg) rotateX(35deg) translateZ(50px);"></div>
+            </div>
+        </div>
+        
+        <!-- DNA Helix -->
+        <div class="dna-helix"></div>
+        
+        <!-- Data Streams -->
+        <div class="data-stream" id="dataStream1"></div>
+        <div class="data-stream" id="dataStream2"></div>
+        <div class="data-stream" id="dataStream3"></div>
+        
+        <!-- Navigation Panels -->
+        <div class="nav-panel fade-element js-positioned" id="panel1" data-original-x="5" data-original-y="45" data-content-type="projects">
+            <div class="panel-glass-container">
+                <div class="panel-glass-layer panel-glass-base"></div>
+                <div class="panel-glass-layer panel-glass-gloss"></div>
+                <div class="panel-glass-layer panel-glass-reflection"></div>
+                <div class="panel-glass-layer panel-glass-refraction"></div>
+                <div class="panel-glass-layer panel-glass-caustics"></div>
+                <div class="panel-glass-layer panel-glass-bands"></div>
+                <div class="panel-hologram"></div>
+                <div class="panel-content">
+                    <div class="panel-icon"></div>
+                    <h2 class="panel-title">Projects</h2>
+                    <p class="panel-description">
+                        View our current and past projects here.
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="nav-panel fade-element js-positioned" id="panel2" data-original-x="77" data-original-y="45" data-content-type="events">
+            <div class="panel-glass-container">
+                <div class="panel-glass-layer panel-glass-base"></div>
+                <div class="panel-glass-layer panel-glass-gloss"></div>
+                <div class="panel-glass-layer panel-glass-reflection"></div>
+                <div class="panel-glass-layer panel-glass-refraction"></div>
+                <div class="panel-glass-layer panel-glass-caustics"></div>
+                <div class="panel-glass-layer panel-glass-bands"></div>
+                <div class="panel-hologram"></div>
+                <div class="panel-content">
+                    <div class="panel-icon"></div>
+                    <h2 class="panel-title">Events</h2>
+                    <p class="panel-description">
+                        View the schedule and upcoming events.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-panel fade-element js-positioned" id="panel3" data-original-x="41" data-original-y="45" data-content-type="about">
+            <div class="panel-glass-container">
+                <div class="panel-glass-layer panel-glass-base"></div>
+                <div class="panel-glass-layer panel-glass-gloss"></div>
+                <div class="panel-glass-layer panel-glass-reflection"></div>
+                <div class="panel-glass-layer panel-glass-refraction"></div>
+                <div class="panel-glass-layer panel-glass-caustics"></div>
+                <div class="panel-glass-layer panel-glass-bands"></div>
+                <div class="panel-hologram"></div>
+                <div class="panel-content">
+                    <div class="panel-icon"></div>
+                    <h2 class="panel-title">About Us</h2>
+                    <p class="panel-description">
+                        Check out our community and learn more about our mission.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-panel fade-element js-positioned" id="panel4" data-original-x="23" data-original-y="35" data-content-type="join">
+            <div class="panel-glass-container">
+                <div class="panel-glass-layer panel-glass-base"></div>
+                <div class="panel-glass-layer panel-glass-gloss"></div>
+                <div class="panel-glass-layer panel-glass-reflection"></div>
+                <div class="panel-glass-layer panel-glass-refraction"></div>
+                <div class="panel-glass-layer panel-glass-caustics"></div>
+                <div class="panel-glass-layer panel-glass-bands"></div>
+                <div class="panel-hologram"></div>
+                <div class="panel-content">
+                    <div class="panel-icon"></div>
+                    <h2 class="panel-title">Join Us</h2>
+                    <p class="panel-description">
+                        All UNC students passionate about computational sciences, apply here.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-panel fade-element js-positioned" id="panel5" data-original-x="59" data-original-y="35" data-content-type="leadership">
+            <div class="panel-glass-container">
+                <div class="panel-glass-layer panel-glass-base"></div>
+                <div class="panel-glass-layer panel-glass-gloss"></div>
+                <div class="panel-glass-layer panel-glass-reflection"></div>
+                <div class="panel-glass-layer panel-glass-refraction"></div>
+                <div class="panel-glass-layer panel-glass-caustics"></div>
+                <div class="panel-glass-layer panel-glass-bands"></div>
+                <div class="panel-hologram"></div>
+                <div class="panel-content">
+                    <div class="panel-icon"></div>
+                    <h2 class="panel-title">Leadership</h2>
+                    <p class="panel-description">
+                        Meet our executive team and project leads.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Load Three.js with defer + onload signal to eliminate polling -->
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" onload="window.__threeLoaded=true"></script>
+    
+    <!-- Load main script with defer -->
+    <script defer src="script.js"></script>
+    <!-- Load mobile handler script -->
+    <script defer src="mobile.js"></script>
+    
+    <!-- Fallback for JavaScript disabled - reveal hidden elements -->
+    <noscript>
+        <style>
+            .js-positioned {
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
+        </style>
+    </noscript>
+</body>
+</html>
