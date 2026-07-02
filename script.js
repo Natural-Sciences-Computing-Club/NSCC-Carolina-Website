@@ -7,6 +7,6 @@
         document.querySelector('.cyberspace, .nav-panel, .mobile-portrait');
 
     if (oldRootPage) {
-        window.location.replace('/?v=20260702-mobile-fix');
+        window.location.replace('/?v=20260702-mobile-logo');
     }
 }());
