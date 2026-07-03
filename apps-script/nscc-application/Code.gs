@@ -1,4 +1,5 @@
 const SHEET_NAME = 'Applications';
+const SPREADSHEET_ID = '1UbgdiJQuSx3OjTzUIxJut7SGv8G13lrqEcx54raXM6M';
 const HEADERS = [
   'Received At',
   'Full Name',
@@ -123,13 +124,7 @@ function saveResume_(resume) {
 }
 
 function getApplicationsSheet_() {
-  const spreadsheetId = PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID');
-
-  if (!spreadsheetId) {
-    throw new Error('Missing SPREADSHEET_ID script property');
-  }
-
-  const spreadsheet = SpreadsheetApp.openById(spreadsheetId);
+  const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
   return spreadsheet.getSheetByName(SHEET_NAME) || spreadsheet.insertSheet(SHEET_NAME);
 }
 

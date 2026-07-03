@@ -7,7 +7,7 @@ This folder contains the Google Apps Script backend for the static application f
 1. Create a Google Sheet for applications.
 2. Open `script.google.com` and create a new Apps Script project.
 3. Copy `Code.gs` into the Apps Script editor.
-4. In Project Settings, add a script property named `SPREADSHEET_ID` with the ID from the Google Sheet URL.
+4. Confirm `Code.gs` contains the application sheet ID: `1UbgdiJQuSx3OjTzUIxJut7SGv8G13lrqEcx54raXM6M`.
 5. Optional: add a script property named `RESUME_FOLDER_ID` with the ID of a Drive folder to store uploaded resumes in. Without it, resumes are saved to the script's Drive root.
 6. Deploy as a Web app:
    - Execute as: `Me`
