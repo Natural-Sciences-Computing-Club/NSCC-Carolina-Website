@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply — NSCC</title>
+    <meta name="description" content="Apply to join the Natural Sciences Computing Club at UNC.">
+    <link rel="icon" type="image/png" href="../assets/nscc-logo-white-circle.png">
+    <meta name="theme-color" content="#060B14">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Fragment+Mono:ital@0;1&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="./apply.css">
+</head>
+<body>
+    <header class="apply-header">
+        <a href="../" class="brand">
+            <img src="../assets/nscc-logo-white-circle.png" alt="NSCC logo" width="36" height="36">
+            <span>Natural Sciences Computing Club</span>
+        </a>
+        <a href="../#join" class="back-link">Back to site</a>
+    </header>
+
+    <main class="apply-shell">
+        <section class="apply-intro">
+            <p class="eyebrow">Natural Sciences Computing Club</p>
+            <h1>Apply to join NSCC</h1>
+            <p>This is a temporary application form. It submits to a Google Apps Script web app endpoint and can be redesigned later without changing the backend contract.</p>
+        </section>
+
+        <form class="apply-form" id="applyForm" novalidate>
+            <input type="text" name="website" id="website" class="honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+            <div class="field-row">
+                <label for="firstName">First name</label>
+                <input type="text" id="firstName" name="firstName" autocomplete="given-name" required>
+            </div>
+
+            <div class="field-row">
+                <label for="lastName">Last name</label>
+                <input type="text" id="lastName" name="lastName" autocomplete="family-name" required>
+            </div>
+
+            <div class="field-row">
+                <label for="email">UNC email</label>
+                <input type="email" id="email" name="email" autocomplete="email" placeholder="name@unc.edu" required>
+            </div>
+
+            <div class="field-row">
+                <label for="year">Class year</label>
+                <select id="year" name="year" required>
+                    <option value="">Select one</option>
+                    <option>First-year</option>
+                    <option>Sophomore</option>
+                    <option>Junior</option>
+                    <option>Senior</option>
+                    <option>Graduate student</option>
+                    <option>Other</option>
+                </select>
+            </div>
+
+            <div class="field-row">
+                <label for="major">Major or intended major</label>
+                <input type="text" id="major" name="major" required>
+            </div>
+
+            <div class="field-row">
+                <label for="interests">Scientific or computational interests</label>
+                <textarea id="interests" name="interests" rows="4" required></textarea>
+            </div>
+
+            <div class="field-row">
+                <label for="experience">Programming experience</label>
+                <textarea id="experience" name="experience" rows="4" placeholder="No experience is fine."></textarea>
+            </div>
+
+            <div class="field-row">
+                <label for="availability">General availability</label>
+                <textarea id="availability" name="availability" rows="3"></textarea>
+            </div>
+
+            <label class="check-row">
+                <input type="checkbox" name="consent" value="yes" required>
+                <span>I understand that NSCC will use this information to review my application and contact me about club participation.</span>
+            </label>
+
+            <div class="form-actions">
+                <button type="submit" id="submitButton">Submit application</button>
+                <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+            </div>
+        </form>
+    </main>
+
+    <script src="./apply-config.js"></script>
+    <script src="./apply.js"></script>
+</body>
+</html>

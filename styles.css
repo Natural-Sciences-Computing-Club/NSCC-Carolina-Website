@@ -112,14 +112,6 @@ a:hover { color: var(--carolina); }
 
 .brand-mark { display: block; border-radius: 50%; }
 
-.brand-name {
-    font-family: var(--serif);
-    font-weight: 600;
-    font-size: 1.15rem;
-    letter-spacing: 0.04em;
-    color: var(--paper);
-}
-
 .masthead-meta {
     display: flex;
     gap: 10px;
