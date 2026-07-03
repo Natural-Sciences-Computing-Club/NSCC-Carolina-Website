@@ -21,12 +21,23 @@
         status.className = `form-status ${type || ''}`.trim();
     }
 
+    function normalizeOptionalUrl(value) {
+        const trimmed = String(value || '').trim();
+        if (!trimmed) return '';
+
+        if (/^[a-z][a-z0-9+.-]*:\/\//i.test(trimmed)) {
+            return trimmed;
+        }
+
+        return `https://${trimmed}`;
+    }
+
     function collectPayload() {
         const data = Object.fromEntries(new FormData(form).entries());
         return {
             fullName: data.fullName || '',
             email: data.email || '',
-            linkedin: data.linkedin || '',
+            linkedin: normalizeOptionalUrl(data.linkedin),
             hoursPerWeek: data.hoursPerWeek || '',
             contribution: data.contribution || '',
             projectIdea: data.projectIdea || '',
