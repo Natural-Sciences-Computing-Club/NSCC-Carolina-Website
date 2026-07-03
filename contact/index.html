@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact — NSCC</title>
+    <meta name="description" content="Get in touch with the Natural Sciences Computing Club at UNC — questions, partnership ideas, or anything else.">
+    <link rel="icon" type="image/png" href="../assets/nscc-logo-white-circle.png">
+    <meta name="theme-color" content="#060B14">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" href="../assets/fonts/Redaction-Regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400..600&family=Fragment+Mono:ital@0;1&display=swap" rel="stylesheet">
+
+    <!-- Shares the application form's stylesheet directly, so this page
+         stays visually identical to it by construction, not by copy. -->
+    <link rel="stylesheet" href="../apply/apply.css">
+</head>
+<body>
+
+    <div class="grain" aria-hidden="true"></div>
+
+    <!-- ============ INK BAND ============ -->
+    <header class="apply-masthead">
+        <a href="../" class="brand" aria-label="NSCC home">
+            <img src="../assets/nscc-logo-white-circle.png" alt="NSCC logo" class="brand-mark" width="34" height="34">
+        </a>
+        <p class="masthead-meta mono" aria-hidden="true">
+            <span>GENERAL INQUIRIES</span>
+        </p>
+        <a href="../#join" class="back-link mono">&larr;&nbsp;Back to site</a>
+    </header>
+
+    <!-- ============ PAPER SHEET ============ -->
+    <main class="sheet">
+        <div class="sheet-inner">
+
+            <header class="form-intro">
+                <p class="eyebrow mono">The Natural Sciences Computing Club · UNC Chapel Hill</p>
+                <h1 class="form-title">Send us a message<span class="rx-50" aria-hidden="true">.</span></h1>
+                <p class="form-lede">
+                    Questions about NSCC, partnership ideas, or something else
+                    entirely — we read everything that lands here.
+                </p>
+                <p class="form-note mono">usually a reply within a few days</p>
+            </header>
+
+            <form class="apply-form" id="contactForm" novalidate>
+                <!-- honeypot: real visitors never see or fill this -->
+                <div class="hp-wrap" aria-hidden="true">
+                    <label for="website">Website</label>
+                    <input type="text" name="website" id="website" tabindex="-1" autocomplete="off">
+                </div>
+
+                <fieldset class="form-block">
+                    <legend class="mono">A — Your details</legend>
+
+                    <div class="field">
+                        <label class="mono" for="name">01 · Your name<span class="req" aria-hidden="true">*</span></label>
+                        <input type="text" id="name" name="name" autocomplete="name" placeholder="Jane Doe" required>
+                    </div>
+
+                    <div class="field">
+                        <label class="mono" for="email">02 · Your email<span class="req" aria-hidden="true">*</span></label>
+                        <input type="email" id="email" name="email" autocomplete="email" placeholder="employee@lab.com" required>
+                    </div>
+                </fieldset>
+
+                <fieldset class="form-block">
+                    <legend class="mono">B — Message</legend>
+
+                    <div class="field">
+                        <label class="mono" for="message">03 · What can we help you with?<span class="req" aria-hidden="true">*</span></label>
+                        <textarea id="message" name="message" rows="6" placeholder="Tell us what's on your mind." required></textarea>
+                    </div>
+                </fieldset>
+
+                <label class="check-row">
+                    <input type="checkbox" name="consent" value="yes" required>
+                    <span>I understand that NSCC will use this information only to
+                    respond to my message.</span>
+                </label>
+
+                <div class="form-actions">
+                    <button type="submit" id="submitButton" class="btn-submit mono">Send message</button>
+                    <p class="form-status mono" id="formStatus" role="status" aria-live="polite"></p>
+                </div>
+            </form>
+
+        </div>
+    </main>
+
+    <!-- ============ INK FOOTER ============ -->
+    <footer class="apply-footer">
+        <p class="mono">Prefer email? <a href="mailto:inquiries@nsccatunc.org">inquiries@nsccatunc.org</a></p>
+        <p class="mono">© <span id="footYear">2026</span> NSCC · nsccatunc.org</p>
+    </footer>
+
+    <script src="./contact-config.js"></script>
+    <script src="./contact.js"></script>
+</body>
+</html>

@@ -1,14 +1,14 @@
 const SHEET_NAME = 'Applications';
 const HEADERS = [
   'Received At',
-  'First Name',
-  'Last Name',
+  'Full Name',
   'Email',
-  'Class Year',
-  'Major',
-  'Interests',
-  'Programming Experience',
-  'Availability',
+  'LinkedIn URL',
+  'Resume',
+  'Hours Per Week',
+  'Contribution',
+  'Project Idea',
+  'Other Projects',
   'Consent',
   'Page URL',
   'User Agent'
@@ -39,18 +39,19 @@ function doPost(e) {
         lock.waitLock(10000);
 
         try {
+          const resumeUrl = saveResume_(payload.resume);
           const sheet = getApplicationsSheet_();
           ensureHeaders_(sheet);
           sheet.appendRow([
             new Date(),
-            clean_(payload.firstName),
-            clean_(payload.lastName),
+            clean_(payload.fullName),
             clean_(payload.email),
-            clean_(payload.year),
-            clean_(payload.major),
-            clean_(payload.interests),
-            clean_(payload.experience),
-            clean_(payload.availability),
+            clean_(payload.linkedin),
+            resumeUrl,
+            clean_(payload.hoursPerWeek),
+            clean_(payload.contribution),
+            clean_(payload.projectIdea),
+            clean_(payload.otherProjects),
             hasConsent_(payload) ? 'Yes' : 'No',
             clean_(payload.pageUrl),
             clean_(payload.userAgent)
@@ -87,7 +88,7 @@ function parsePayload_(e) {
 
 function validate_(payload) {
   const errors = [];
-  const required = ['firstName', 'lastName', 'email', 'year', 'major', 'interests'];
+  const required = ['fullName', 'email', 'hoursPerWeek', 'contribution', 'projectIdea'];
 
   required.forEach(function (field) {
     if (!String(payload[field] || '').trim()) {
@@ -104,6 +105,21 @@ function validate_(payload) {
   }
 
   return errors;
+}
+
+// The resume arrives as a Blob only when the form posted multipart/form-data
+// with a file actually chosen; the optional field being left empty leaves
+// this as '' (from e.parameter), caught by the typeof check below.
+function saveResume_(resume) {
+  if (!resume || typeof resume.getBytes !== 'function' || !resume.getBytes().length) {
+    return '';
+  }
+
+  const folderId = PropertiesService.getScriptProperties().getProperty('RESUME_FOLDER_ID');
+  const folder = folderId ? DriveApp.getFolderById(folderId) : DriveApp.getRootFolder();
+  const file = folder.createFile(resume);
+  file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  return file.getUrl();
 }
 
 function getApplicationsSheet_() {

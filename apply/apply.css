@@ -206,6 +206,7 @@ body {
 
 input[type="text"],
 input[type="email"],
+input[type="url"],
 select,
 textarea {
     width: 100%;
@@ -230,6 +231,41 @@ textarea:focus {
     outline: none;
     border-color: var(--carolina);
     box-shadow: 0 0 0 3px rgba(75, 156, 211, 0.2);
+}
+
+/* File input: no box of its own — just the native chooser, restyled
+   to the same mono/hairline language as the rest of the form. */
+.field-hint { color: var(--slate-on-paper); margin: -6px 0 10px; }
+
+input[type="file"] {
+    display: block;
+    width: 100%;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--slate-on-paper);
+    padding: 10px 0;
+}
+
+input[type="file"]::file-selector-button {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-on-paper);
+    background: #FBFDFE;
+    border: 1px solid var(--field-edge);
+    border-radius: 0;
+    padding: 8px 14px;
+    margin-right: 14px;
+    cursor: pointer;
+    transition: border-color .2s ease;
+}
+
+input[type="file"]::file-selector-button:hover { border-color: var(--carolina); }
+
+input[type="file"]:focus-visible::file-selector-button {
+    outline: 2px solid var(--carolina);
+    outline-offset: 2px;
 }
 
 .select-wrap { position: relative; }

@@ -1,20 +1,22 @@
+/* ==========================================================================
+   NSCC — contact form
+   Same hidden-iframe + postMessage pattern as apply.js: submits to a Google
+   Apps Script web app that calls MailApp.sendEmail(), no server of our own.
+   ========================================================================== */
+
 (function () {
     'use strict';
 
     const yearEl = document.getElementById('footYear');
     if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-    const form = document.getElementById('applyForm');
+    const form = document.getElementById('contactForm');
     const status = document.getElementById('formStatus');
     const submitButton = document.getElementById('submitButton');
-    const resumeInput = document.getElementById('resume');
-    const endpoint = String(window.NSCC_APPLY_ENDPOINT || '').trim();
+    const endpoint = String(window.NSCC_CONTACT_ENDPOINT || '').trim();
     const configured = endpoint.startsWith('https://script.google.com/macros/s/') && !endpoint.includes('PASTE_');
-    const RESPONSE_SOURCE = 'nscc-application';
-    const MAX_RESUME_BYTES = 10 * 1024 * 1024;
+    const RESPONSE_SOURCE = 'nscc-contact';
     let pendingSubmission = null;
-    let resumeOriginalParent = null;
-    let resumeOriginalNext = null;
 
     function setStatus(message, type) {
         status.textContent = message;
@@ -24,13 +26,9 @@
     function collectPayload() {
         const data = Object.fromEntries(new FormData(form).entries());
         return {
-            fullName: data.fullName || '',
+            name: data.name || '',
             email: data.email || '',
-            linkedin: data.linkedin || '',
-            hoursPerWeek: data.hoursPerWeek || '',
-            contribution: data.contribution || '',
-            projectIdea: data.projectIdea || '',
-            otherProjects: data.otherProjects || '',
+            message: data.message || '',
             consent: data.consent === 'yes',
             website: data.website || '',
             submittedAtClient: new Date().toISOString(),
@@ -53,30 +51,18 @@
     }
 
     function ensureFrame() {
-        let frame = document.getElementById('appsScriptSubmitFrame');
+        let frame = document.getElementById('contactSubmitFrame');
         if (!frame) {
             frame = document.createElement('iframe');
-            frame.name = 'appsScriptSubmitFrame';
-            frame.id = 'appsScriptSubmitFrame';
-            frame.title = 'Application submission frame';
+            frame.name = 'contactSubmitFrame';
+            frame.id = 'contactSubmitFrame';
+            frame.title = 'Contact submission frame';
             frame.hidden = true;
             document.body.appendChild(frame);
         }
         return frame;
     }
 
-    function restoreResumeInput() {
-        if (resumeInput && resumeOriginalParent) {
-            resumeOriginalParent.insertBefore(resumeInput, resumeOriginalNext);
-        }
-        resumeOriginalParent = null;
-        resumeOriginalNext = null;
-    }
-
-    // The resume can only travel as real multipart data, so — unlike every
-    // other field, which is copied into a hidden input — its file input is
-    // moved (not cloned; cloning drops the selected FileList) into the
-    // synthetic submission form, then moved back once submit() has read it.
     function postToAppsScript(payload) {
         return new Promise((resolve, reject) => {
             ensureFrame();
@@ -84,7 +70,6 @@
             const submissionId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
             const timeout = window.setTimeout(() => {
                 pendingSubmission = null;
-                restoreResumeInput();
                 reject(new Error('Submission confirmation timed out.'));
             }, 15000);
 
@@ -93,11 +78,8 @@
             const postForm = document.createElement('form');
             postForm.method = 'POST';
             postForm.action = endpoint;
-            postForm.target = 'appsScriptSubmitFrame';
+            postForm.target = 'contactSubmitFrame';
             postForm.style.display = 'none';
-
-            const hasResume = resumeInput && resumeInput.files && resumeInput.files.length > 0;
-            if (hasResume) postForm.enctype = 'multipart/form-data';
 
             const fields = {
                 ...payload,
@@ -115,17 +97,9 @@
                 postForm.appendChild(input);
             });
 
-            if (hasResume) {
-                resumeOriginalParent = resumeInput.parentNode;
-                resumeOriginalNext = resumeInput.nextSibling;
-                postForm.appendChild(resumeInput);
-            }
-
             document.body.appendChild(postForm);
             postForm.submit();
             postForm.remove();
-
-            if (hasResume) restoreResumeInput();
         });
     }
 
@@ -160,28 +134,23 @@
             return;
         }
 
-        if (resumeInput && resumeInput.files[0] && resumeInput.files[0].size > MAX_RESUME_BYTES) {
-            setStatus('Resume must be under 10MB.', 'error');
-            return;
-        }
-
         if (!configured) {
-            setStatus('Add the deployed Apps Script URL in apply-config.js before collecting applications.', 'error');
+            setStatus('Add the deployed Apps Script URL in contact-config.js before accepting messages.', 'error');
             return;
         }
 
         const payload = collectPayload();
 
         submitButton.disabled = true;
-        setStatus('Submitting...', '');
+        setStatus('Sending...', '');
 
         try {
             await postToAppsScript(payload);
 
             form.reset();
-            setStatus('Application submitted.', 'success');
+            setStatus('Message sent.', 'success');
         } catch (error) {
-            setStatus('Submission failed. Please try again.', 'error');
+            setStatus('Send failed. Please try again, or email us directly.', 'error');
         } finally {
             submitButton.disabled = false;
         }

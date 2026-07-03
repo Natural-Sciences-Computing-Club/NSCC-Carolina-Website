@@ -54,45 +54,29 @@
                 <fieldset class="form-block">
                     <legend class="mono">A — Identification</legend>
 
-                    <div class="field-pair">
-                        <div class="field">
-                            <label class="mono" for="firstName">01 · First name<span class="req" aria-hidden="true">*</span></label>
-                            <input type="text" id="firstName" name="firstName" autocomplete="given-name" required>
-                        </div>
-                        <div class="field">
-                            <label class="mono" for="lastName">02 · Last name<span class="req" aria-hidden="true">*</span></label>
-                            <input type="text" id="lastName" name="lastName" autocomplete="family-name" required>
-                        </div>
+                    <div class="field">
+                        <label class="mono" for="fullName">01 · Please provide your first and last name.<span class="req" aria-hidden="true">*</span></label>
+                        <input type="text" id="fullName" name="fullName" autocomplete="name" required>
                     </div>
 
                     <div class="field">
-                        <label class="mono" for="email">03 · UNC email<span class="req" aria-hidden="true">*</span></label>
+                        <label class="mono" for="email">02 · Please provide your UNC email.<span class="req" aria-hidden="true">*</span></label>
                         <input type="email" id="email" name="email" autocomplete="email" placeholder="name@unc.edu" required>
                     </div>
                 </fieldset>
 
                 <fieldset class="form-block">
-                    <legend class="mono">B — Course of study</legend>
+                    <legend class="mono">B — Materials</legend>
 
-                    <div class="field-pair">
-                        <div class="field">
-                            <label class="mono" for="year">04 · Class year<span class="req" aria-hidden="true">*</span></label>
-                            <div class="select-wrap">
-                                <select id="year" name="year" required>
-                                    <option value="">Select one</option>
-                                    <option>First-year</option>
-                                    <option>Sophomore</option>
-                                    <option>Junior</option>
-                                    <option>Senior</option>
-                                    <option>Graduate student</option>
-                                    <option>Other</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <label class="mono" for="major">05 · Major or intended major<span class="req" aria-hidden="true">*</span></label>
-                            <input type="text" id="major" name="major" required>
-                        </div>
+                    <div class="field">
+                        <label class="mono" for="resume">03 · Please attach your personal resume.</label>
+                        <p class="field-hint mono">PDF · up to 10MB</p>
+                        <input type="file" id="resume" name="resume" accept="application/pdf,.pdf">
+                    </div>
+
+                    <div class="field">
+                        <label class="mono" for="linkedin">04 · Please share your LinkedIn URL, if you have one.</label>
+                        <input type="url" id="linkedin" name="linkedin" autocomplete="url" placeholder="https://linkedin.com/in/…">
                     </div>
                 </fieldset>
 
@@ -100,18 +84,23 @@
                     <legend class="mono">C — Statement</legend>
 
                     <div class="field">
-                        <label class="mono" for="interests">06 · Scientific or computational interests<span class="req" aria-hidden="true">*</span></label>
-                        <textarea id="interests" name="interests" rows="4" required></textarea>
+                        <label class="mono" for="hoursPerWeek">05 · What is the maximum number of hours per week you could see yourself contributing to NSCC?<span class="req" aria-hidden="true">*</span></label>
+                        <input type="text" id="hoursPerWeek" name="hoursPerWeek" inputmode="numeric" required>
                     </div>
 
                     <div class="field">
-                        <label class="mono" for="experience">07 · Programming experience</label>
-                        <textarea id="experience" name="experience" rows="4" placeholder="No experience is fine."></textarea>
+                        <label class="mono" for="contribution">06 · In 5 sentences or less, please share what you could add to the NSCC team.<span class="req" aria-hidden="true">*</span></label>
+                        <textarea id="contribution" name="contribution" rows="4" required></textarea>
                     </div>
 
                     <div class="field">
-                        <label class="mono" for="availability">08 · General availability</label>
-                        <textarea id="availability" name="availability" rows="3" placeholder="Days and times that usually work for you."></textarea>
+                        <label class="mono" for="projectIdea">07 · If you were a project leader at NSCC and could pick any project to work on, what would the project be? What methods would you use?<span class="req" aria-hidden="true">*</span></label>
+                        <textarea id="projectIdea" name="projectIdea" rows="5" required></textarea>
+                    </div>
+
+                    <div class="field">
+                        <label class="mono" for="otherProjects">08 · If you have any personal projects or skills that may not be represented in prior statements, but you feel should be shared with NSCC, please list them. If needed, accompany each project/skill with a description in three sentences or less.</label>
+                        <textarea id="otherProjects" name="otherProjects" rows="4"></textarea>
                     </div>
                 </fieldset>
 
@@ -132,7 +121,7 @@
 
     <!-- ============ INK FOOTER ============ -->
     <footer class="apply-footer">
-        <p class="mono">Questions? <a href="mailto:info.uncnscc@gmail.com">info.uncnscc@gmail.com</a></p>
+        <p class="mono">Questions? <a href="mailto:inquiries@nsccatunc.org">inquiries@nsccatunc.org</a></p>
         <p class="mono">© <span id="footYear">2026</span> NSCC · nsccatunc.org</p>
     </footer>
 

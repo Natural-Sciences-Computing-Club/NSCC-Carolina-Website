@@ -162,7 +162,7 @@ a:hover { color: var(--carolina); }
     text-decoration: none;
 }
 
-.brand-mark { display: block; border-radius: 50%; }
+.brand-mark { display: block; height: 34px; width: auto; }
 
 .masthead-meta {
     display: flex;
@@ -313,6 +313,9 @@ body.nav-open .nav-toggle span:last-child { transform: translateY(-3.25px) rotat
 
 .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
 
+/* Ledger double rule: a thin companion hairline just under the main one —
+   the mark old account ledgers and book colophons use to close out a
+   block, rather than a single generic divider. */
 .hero-foot {
     position: relative;
     z-index: 2;
@@ -324,6 +327,17 @@ body.nav-open .nav-toggle span:last-child { transform: translateY(-3.25px) rotat
     border-top: 1px solid var(--hairline);
     color: var(--slate);
     font-size: 0.62rem;
+}
+
+.hero-foot::before {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--hairline);
+    opacity: 0.55;
 }
 
 .hero-foot-right {
@@ -381,23 +395,6 @@ body.nav-open .nav-toggle span:last-child { transform: translateY(-3.25px) rotat
 #mission {
     min-height: 100svh;
 }
-
-/* Every section closes with a Halmos tombstone — the end-of-proof mark.
-   Drawn as a box, not the ∎ glyph, so it renders identically everywhere.
-   (.section-paper's own ::after is taken by its Bayer edge, so the paper
-   section carries the mark on .paper-inner instead.) */
-.section:not(.section-paper)::after,
-.paper-inner::after {
-    content: '';
-    display: block;
-    width: 9px;
-    height: 13px;
-    margin: clamp(48px, 7vh, 72px) auto 0;
-    background: var(--slate);
-    opacity: 0.8;
-}
-
-.paper-inner::after { background: #5a6f88; }
 
 /* No rules between sections — whitespace separates; the section number,
    set huge in the fully shattered cut of Redaction, is the only marker. */
