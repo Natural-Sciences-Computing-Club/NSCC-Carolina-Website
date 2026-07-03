@@ -1,6 +1,9 @@
 (function () {
     'use strict';
 
+    const yearEl = document.getElementById('footYear');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
+
     const form = document.getElementById('applyForm');
     const status = document.getElementById('formStatus');
     const submitButton = document.getElementById('submitButton');

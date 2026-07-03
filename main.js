@@ -59,9 +59,9 @@ const BinaryLandmark = (() => {
         const ncAspect = imgs[0].naturalHeight / imgs[0].naturalWidth;
         let w, cx, cy;
         if (isMobile()) {
-            w = Math.min(window.innerWidth * 0.64, 270);
+            w = Math.min(window.innerWidth * 0.92, 440);
             cx = vw / 2;
-            cy = Math.min(vh * 0.31, 245);
+            cy = hero.offsetHeight * 0.74;
         } else {
             w = Math.min(vw * 0.44, 620);
             cx = vw * 0.68;

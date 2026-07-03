@@ -1,9 +1,60 @@
 /* ==========================================================================
    NSCC — Natural Sciences Computing Club at UNC
    "A scientific journal, typeset by a machine."
-   Type: STIX Two Text (scientific publishing) · Fragment Mono (lab printout)
+   Type: Redaction (display — its degraded cuts ARE the dither) ·
+         Newsreader (prose) · Fragment Mono (lab printout)
    Ground: ink navy · Accent: Carolina blue #4B9CD3 · Texture: 8×8 Bayer dither
    ========================================================================== */
+
+/* ---- Redaction, self-hosted (OFL/LGPL, redaction.us) --------------------
+   The numbered cuts are progressively bitmap-degraded: 0 (clean) → 100
+   (shattered). The same idea as the site's ordered dither, built into
+   the letterforms themselves. */
+@font-face {
+    font-family: 'Redaction';
+    src: url('./assets/fonts/Redaction-Regular.woff2') format('woff2');
+    font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+    font-family: 'Redaction';
+    src: url('./assets/fonts/Redaction-Italic.woff2') format('woff2');
+    font-weight: 400; font-style: italic; font-display: swap;
+}
+@font-face {
+    font-family: 'Redaction';
+    src: url('./assets/fonts/Redaction-Bold.woff2') format('woff2');
+    font-weight: 700; font-style: normal; font-display: swap;
+}
+@font-face {
+    font-family: 'Redaction 20';
+    src: url('./assets/fonts/Redaction_20-Regular.woff2') format('woff2');
+    font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+    font-family: 'Redaction 35';
+    src: url('./assets/fonts/Redaction_35-Regular.woff2') format('woff2');
+    font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+    font-family: 'Redaction 50';
+    src: url('./assets/fonts/Redaction_50-Regular.woff2') format('woff2');
+    font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+    font-family: 'Redaction 70';
+    src: url('./assets/fonts/Redaction_70-Regular.woff2') format('woff2');
+    font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+    font-family: 'Redaction 100';
+    src: url('./assets/fonts/Redaction_100-Regular.woff2') format('woff2');
+    font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+    font-family: 'Redaction 100';
+    src: url('./assets/fonts/Redaction_100-Bold.woff2') format('woff2');
+    font-weight: 700; font-style: normal; font-display: swap;
+}
 
 :root {
     --ink:      #060B14;
@@ -22,7 +73,9 @@
     --glass-edge: rgba(169, 205, 232, 0.22);
     --glass-highlight: rgba(233, 243, 250, 0.09);
 
-    --serif: 'STIX Two Text', 'Times New Roman', serif;
+    --display: 'Redaction', 'Times New Roman', serif;
+    --shatter: 'Redaction 100', 'Times New Roman', serif;
+    --body: 'Newsreader', Georgia, serif;
     --mono: 'Fragment Mono', 'Courier New', monospace;
 
     --gutter: clamp(20px, 5vw, 72px);
@@ -41,11 +94,11 @@ html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
 
 body {
-    font-family: var(--serif);
+    font-family: var(--body);
     background: var(--ink);
     color: var(--paper);
-    line-height: 1.65;
-    font-size: 17px;
+    line-height: 1.62;
+    font-size: 18px;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
 }
@@ -65,7 +118,6 @@ a:hover { color: var(--carolina); }
 :focus-visible {
     outline: 2px solid var(--carolina);
     outline-offset: 3px;
-    border-radius: 2px;
 }
 
 /* ==================== dither grain overlay ==================== */
@@ -159,11 +211,10 @@ a:hover { color: var(--carolina); }
     background: var(--carolina);
     text-decoration: none;
     padding: 8px 16px;
-    border-radius: 999px;
-    transition: background-color .25s ease, transform .25s ease;
+    transition: background-color .25s ease;
 }
 
-.nav-cta:hover { background: var(--sky); color: var(--ink); transform: translateY(-1px); }
+.nav-cta:hover { background: var(--sky); color: var(--ink); }
 
 .nav-toggle {
     display: none;
@@ -171,7 +222,6 @@ a:hover { color: var(--carolina); }
     width: 40px; height: 40px;
     background: none;
     border: 1px solid var(--hairline-strong);
-    border-radius: 50%;
     cursor: pointer;
     flex-direction: column;
     align-items: center;
@@ -223,7 +273,7 @@ body.nav-open .nav-toggle span:last-child { transform: translateY(-3.25px) rotat
 .hero-inner {
     position: relative;
     z-index: 2;
-    max-width: 640px;
+    max-width: 700px;
     pointer-events: none;
 }
 
@@ -235,18 +285,24 @@ body.nav-open .nav-toggle span:last-child { transform: translateY(-3.25px) rotat
 }
 
 .hero-title {
-    font-size: clamp(3.2rem, 9.5vw, 7.2rem);
-    font-weight: 500;
-    line-height: 0.98;
-    letter-spacing: -0.015em;
+    font-family: var(--display);
+    font-size: clamp(2.7rem, 6.6vw, 4.7rem);
+    font-weight: 400;
+    line-height: 1.04;
+    letter-spacing: -0.01em;
     margin-bottom: 30px;
 }
 
-.hero-title em {
-    font-style: italic;
-    font-weight: 400;
-    color: var(--carolina);
-}
+/* The thesis, typeset: the first sentence is the clean cut of Redaction;
+   the second discretizes glyph by glyph through the degraded cuts —
+   stopping at the mid cuts so the words stay whole — and takes on the
+   data's color as it goes. */
+.hero-decay .w { white-space: nowrap; }
+.rx-0  { font-family: var(--display); }
+.rx-20 { font-family: 'Redaction 20', var(--display); }
+.rx-35 { font-family: 'Redaction 35', var(--display); color: #C4DAEC; }
+.rx-50 { font-family: 'Redaction 50', var(--display); color: var(--sky); }
+.rx-50.cx { color: var(--carolina); }
 
 .hero-lede {
     font-size: clamp(1.02rem, 1.5vw, 1.2rem);
@@ -278,25 +334,24 @@ body.nav-open .nav-toggle span:last-child { transform: translateY(-3.25px) rotat
 
 /* ==================== buttons ==================== */
 
+/* Sharp plates. On hover the flat fill breaks into the site's Bayer tiles —
+   the button dithers when touched. No lift, no glow. */
 .btn {
     display: inline-block;
     padding: 13px 26px;
-    border-radius: 999px;
     text-decoration: none;
-    transition: transform .25s ease, background-color .25s ease, border-color .25s ease, box-shadow .25s ease;
+    transition: background-color .25s ease, border-color .25s ease, color .25s ease;
 }
 
 .btn-primary {
     background: var(--carolina);
     color: var(--ink);
-    box-shadow: 0 0 0 0 rgba(75, 156, 211, 0);
+    border: 1px solid var(--carolina);
 }
 
 .btn-primary:hover {
-    background: var(--sky);
+    background: url('./assets/bayer-78.png') var(--sky);
     color: var(--ink);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 28px -6px rgba(75, 156, 211, 0.45);
 }
 
 .btn-ghost {
@@ -307,8 +362,8 @@ body.nav-open .nav-toggle span:last-child { transform: translateY(-3.25px) rotat
 
 .btn-ghost:hover {
     border-color: var(--carolina);
-    color: var(--sky);
-    transform: translateY(-2px);
+    color: var(--paper);
+    background: url('./assets/bayer-25.png') rgba(19, 41, 75, 0.18);
 }
 
 .btn-block { display: block; text-align: center; }
@@ -327,30 +382,46 @@ body.nav-open .nav-toggle span:last-child { transform: translateY(-3.25px) rotat
     min-height: 100svh;
 }
 
+/* Every section closes with a Halmos tombstone — the end-of-proof mark.
+   Drawn as a box, not the ∎ glyph, so it renders identically everywhere.
+   (.section-paper's own ::after is taken by its Bayer edge, so the paper
+   section carries the mark on .paper-inner instead.) */
+.section:not(.section-paper)::after,
+.paper-inner::after {
+    content: '';
+    display: block;
+    width: 9px;
+    height: 13px;
+    margin: clamp(48px, 7vh, 72px) auto 0;
+    background: var(--slate);
+    opacity: 0.8;
+}
+
+.paper-inner::after { background: #5a6f88; }
+
+/* No rules between sections — whitespace separates; the section number,
+   set huge in the fully shattered cut of Redaction, is the only marker. */
 .section-head {
     display: flex;
     align-items: baseline;
-    gap: 18px;
+    gap: clamp(18px, 2.5vw, 30px);
     margin-bottom: clamp(40px, 6vh, 64px);
 }
 
 .section-no {
+    font-family: 'Redaction 50', var(--display);
+    font-size: clamp(3.2rem, 6.5vw, 5rem);
+    line-height: 0.9;
     color: var(--carolina);
-    font-size: 0.8rem;
+    font-variant-numeric: tabular-nums;
 }
 
 .section-title {
+    font-family: var(--display);
     font-size: clamp(1.9rem, 3.4vw, 2.7rem);
-    font-weight: 500;
+    font-weight: 400;
     letter-spacing: -0.01em;
     line-height: 1.1;
-}
-
-.section-rule {
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(90deg, var(--hairline-strong), transparent);
-    transform: translateY(-6px);
 }
 
 /* ==================== glass ==================== */
@@ -393,13 +464,16 @@ body.nav-open .nav-toggle span:last-child { transform: translateY(-3.25px) rotat
     font-weight: 400;
 }
 
+/* The drop cap survives, but bitmap-shattered — a plate letter
+   in Redaction 100 rather than a smooth initial. */
 .mission-text::first-letter {
-    font-size: 2.7em;
+    font-family: var(--shatter);
+    font-size: 3em;
     float: left;
-    line-height: 0.82;
-    padding: 6px 12px 0 0;
+    line-height: 0.78;
+    padding: 8px 14px 0 0;
     color: var(--carolina);
-    font-weight: 500;
+    font-weight: 400;
 }
 
 /* The reserved plate the binary Old Well assembles into */
@@ -498,8 +572,9 @@ body.nav-open .nav-toggle span:last-child { transform: translateY(-3.25px) rotat
 .figure-body { padding: clamp(26px, 4vw, 48px); }
 
 .figure-title {
+    font-family: var(--display);
     font-size: clamp(1.35rem, 2.4vw, 1.8rem);
-    font-weight: 500;
+    font-weight: 400;
     margin-bottom: 18px;
     letter-spacing: -0.01em;
 }
@@ -564,8 +639,9 @@ body.nav-open .nav-toggle span:last-child { transform: translateY(-3.25px) rotat
 }
 
 .cal-month {
+    font-family: var(--display);
     font-size: clamp(1.15rem, 2vw, 1.5rem);
-    font-weight: 500;
+    font-weight: 400;
     letter-spacing: 0.01em;
 }
 
@@ -574,12 +650,11 @@ body.nav-open .nav-toggle span:last-child { transform: translateY(-3.25px) rotat
     border: 1px solid var(--hairline-strong);
     color: var(--paper);
     padding: 9px 16px;
-    border-radius: 999px;
     cursor: pointer;
     transition: border-color .25s ease, color .25s ease, background-color .25s ease;
 }
 
-.cal-nav:hover { border-color: var(--carolina); color: var(--sky); background: rgba(75,156,211,.08); }
+.cal-nav:hover { border-color: var(--carolina); color: var(--paper); background: url('./assets/bayer-25.png'); }
 
 /* -------- the semester signal: one dithered bin per day -------- */
 
@@ -747,7 +822,6 @@ body.nav-open .nav-toggle span:last-child { transform: translateY(-3.25px) rotat
 
 .section-paper .section-title { color: var(--ink-on-paper); }
 .section-paper .section-no { color: #3d6ea8; }
-.section-paper .section-rule { background: linear-gradient(90deg, rgba(20, 36, 61, 0.35), transparent); }
 
 .paper-note {
     color: #5a6f88;
@@ -806,8 +880,9 @@ body.nav-open .nav-toggle span:last-child { transform: translateY(-3.25px) rotat
 }
 
 .leader-name {
+    font-family: var(--display);
     font-size: clamp(1.7rem, 3vw, 2.3rem);
-    font-weight: 500;
+    font-weight: 400;
     letter-spacing: -0.01em;
     margin-bottom: 16px;
 }
@@ -834,12 +909,13 @@ body.nav-open .nav-toggle span:last-child { transform: translateY(-3.25px) rotat
 }
 
 .join-copy p:first-child::first-letter {
-    font-size: 2.6em;
+    font-family: var(--shatter);
+    font-size: 2.9em;
     float: left;
-    line-height: 0.82;
-    padding: 5px 11px 0 0;
+    line-height: 0.78;
+    padding: 7px 13px 0 0;
     color: var(--carolina);
-    font-weight: 500;
+    font-weight: 400;
 }
 
 .join-card {
@@ -963,52 +1039,8 @@ body.nav-open .nav-toggle span:last-child { transform: translateY(-3.25px) rotat
     .nav-link { padding: 12px 0; font-size: 0.9rem; }
     .nav-cta { margin-top: 10px; }
 
-    .hero {
-        min-height: 100svh;
-        justify-content: flex-start;
-        padding-top: clamp(300px, 42svh, 350px);
-    }
-
-    .hero-inner {
-        max-width: 100%;
-    }
-
-    .eyebrow {
-        margin-bottom: 14px;
-        font-size: 0.64rem;
-        line-height: 1.8;
-    }
-
-    .hero-title {
-        font-size: clamp(2.9rem, 15vw, 4rem);
-        margin-bottom: 18px;
-    }
-
-    .hero-lede {
-        font-size: 1rem;
-        line-height: 1.58;
-        margin-bottom: 28px;
-    }
-
-    .hero-actions {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 12px;
-        max-width: 330px;
-    }
-
-    .hero-actions .btn {
-        width: 100%;
-        text-align: center;
-        padding: 13px 18px;
-    }
-
-    .hero-foot {
-        width: 100%;
-        flex-wrap: wrap;
-        gap: 12px;
-        margin-top: clamp(30px, 5svh, 48px);
-    }
+    .hero { padding-top: calc(var(--masthead-h) + 24px); }
+    .hero-foot { flex-wrap: wrap; gap: 12px; }
     .hero-foot-right { display: none; }
 
     .section-head { flex-wrap: wrap; }
