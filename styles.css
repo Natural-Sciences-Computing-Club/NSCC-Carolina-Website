@@ -180,6 +180,11 @@ a:hover { color: var(--carolina); }
     cursor: pointer;
 }
 
+.footer-logo-toggle .logo-toggle-img {
+    height: 42px;
+    width: auto;
+}
+
 .logo-toggle:focus-visible {
     outline: 1px solid var(--carolina);
     outline-offset: 6px;
