@@ -12,7 +12,12 @@ This folder contains the Google Apps Script backend for the static application f
 6. Deploy as a Web app:
    - Execute as: `Me`
    - Who has access: `Anyone`
-7. Copy the `/exec` deployment URL.
-8. Paste that URL into `apply/apply-config.js`.
+7. If updating an existing deployment, choose **Manage deployments**, edit the web app deployment, select a **New version**, and deploy. Saving code alone is not enough for `/exec` to run the new code.
+8. Open the `/exec` deployment URL and confirm the JSON includes:
+   - `"version": "2026-07-04-spreadsheet-id-healthcheck"`
+   - `"spreadsheetId": "1UbgdiJQuSx3OjTzUIxJut7SGv8G13lrqEcx54raXM6M"`
+   - `"spreadsheetOk": true`
+9. Copy the `/exec` deployment URL.
+10. Paste that URL into `apply/apply-config.js`.
 
 The frontend submits to the Apps Script web app through a hidden iframe and waits for a `postMessage` confirmation from the Apps Script response page. This lets the static GitHub Pages site receive a success/error signal without relying on unofficial Google Forms fields or a separate backend. The resume field is the one exception: it's posted as real `multipart/form-data` (the file input is moved into the submission form and back, since a file's value can't be copied into a hidden field) so Apps Script receives it as a Blob and saves it to Drive.

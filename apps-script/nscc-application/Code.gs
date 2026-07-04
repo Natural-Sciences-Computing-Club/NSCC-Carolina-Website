@@ -1,5 +1,6 @@
 const SHEET_NAME = 'Applications';
 const SPREADSHEET_ID = '1UbgdiJQuSx3OjTzUIxJut7SGv8G13lrqEcx54raXM6M';
+const SCRIPT_VERSION = '2026-07-04-spreadsheet-id-healthcheck';
 const HEADERS = [
   'Received At',
   'Full Name',
@@ -18,7 +19,10 @@ const HEADERS = [
 function doGet() {
   return jsonResponse_({
     ok: true,
-    message: 'NSCC application endpoint is running.'
+    message: 'NSCC application endpoint is running.',
+    version: SCRIPT_VERSION,
+    spreadsheetId: SPREADSHEET_ID,
+    spreadsheetOk: canOpenSpreadsheet_()
   });
 }
 
@@ -126,6 +130,16 @@ function saveResume_(resume) {
 function getApplicationsSheet_() {
   const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
   return spreadsheet.getSheetByName(SHEET_NAME) || spreadsheet.insertSheet(SHEET_NAME);
+}
+
+function canOpenSpreadsheet_() {
+  try {
+    SpreadsheetApp.openById(SPREADSHEET_ID);
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
 }
 
 function ensureHeaders_(sheet) {
