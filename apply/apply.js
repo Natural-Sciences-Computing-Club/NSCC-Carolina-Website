@@ -13,8 +13,6 @@
     const RESPONSE_SOURCE = 'nscc-application';
     const MAX_RESUME_BYTES = 10 * 1024 * 1024;
     let pendingSubmission = null;
-    let resumeOriginalParent = null;
-    let resumeOriginalNext = null;
 
     function setStatus(message, type) {
         status.textContent = message;
@@ -76,18 +74,28 @@
         return frame;
     }
 
-    function restoreResumeInput() {
-        if (resumeInput && resumeOriginalParent) {
-            resumeOriginalParent.insertBefore(resumeInput, resumeOriginalNext);
+    function readResume(file) {
+        if (!file) {
+            return Promise.resolve({});
         }
-        resumeOriginalParent = null;
-        resumeOriginalNext = null;
+
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+                const dataUrl = String(reader.result || '');
+                const base64 = dataUrl.includes(',') ? dataUrl.split(',').pop() : dataUrl;
+
+                resolve({
+                    resumeName: file.name,
+                    resumeMimeType: file.type || 'application/pdf',
+                    resumeData: base64
+                });
+            };
+            reader.onerror = () => reject(new Error('Resume could not be read.'));
+            reader.readAsDataURL(file);
+        });
     }
 
-    // The resume can only travel as real multipart data, so — unlike every
-    // other field, which is copied into a hidden input — its file input is
-    // moved (not cloned; cloning drops the selected FileList) into the
-    // synthetic submission form, then moved back once submit() has read it.
     function postToAppsScript(payload) {
         return new Promise((resolve, reject) => {
             ensureFrame();
@@ -95,7 +103,6 @@
             const submissionId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
             const timeout = window.setTimeout(() => {
                 pendingSubmission = null;
-                restoreResumeInput();
                 reject(new Error('Submission confirmation timed out.'));
             }, 15000);
 
@@ -106,9 +113,6 @@
             postForm.action = endpoint;
             postForm.target = 'appsScriptSubmitFrame';
             postForm.style.display = 'none';
-
-            const hasResume = resumeInput && resumeInput.files && resumeInput.files.length > 0;
-            if (hasResume) postForm.enctype = 'multipart/form-data';
 
             const fields = {
                 ...payload,
@@ -126,17 +130,9 @@
                 postForm.appendChild(input);
             });
 
-            if (hasResume) {
-                resumeOriginalParent = resumeInput.parentNode;
-                resumeOriginalNext = resumeInput.nextSibling;
-                postForm.appendChild(resumeInput);
-            }
-
             document.body.appendChild(postForm);
             postForm.submit();
             postForm.remove();
-
-            if (hasResume) restoreResumeInput();
         });
     }
 
@@ -181,12 +177,16 @@
             return;
         }
 
-        const payload = collectPayload();
-
         submitButton.disabled = true;
         setStatus('Submitting...', '');
 
         try {
+            const resumeFields = await readResume(resumeInput && resumeInput.files[0]);
+            const payload = {
+                ...collectPayload(),
+                ...resumeFields
+            };
+
             await postToAppsScript(payload);
 
             form.reset();

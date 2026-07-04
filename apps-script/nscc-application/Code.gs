@@ -1,6 +1,6 @@
 const SHEET_NAME = 'Applications';
-const SPREADSHEET_ID = '1UbgdiJQuSx3OjTzUIxJut7SGv8G13lrqEcx54raXM6M';
-const SCRIPT_VERSION = '2026-07-04-spreadsheet-id-healthcheck';
+const SPREADSHEET_ID = '1_tvZiGs-bxQGmG-op90nJ6nwl_aAQxJJKDLo_vAc198';
+const SCRIPT_VERSION = '2026-07-04-resume-base64';
 const HEADERS = [
   'Received At',
   'Full Name',
@@ -44,7 +44,7 @@ function doPost(e) {
         lock.waitLock(10000);
 
         try {
-          const resumeUrl = saveResume_(payload.resume);
+          const resumeUrl = saveResume_(payload);
           const sheet = getApplicationsSheet_();
           ensureHeaders_(sheet);
           sheet.appendRow([
@@ -112,17 +112,32 @@ function validate_(payload) {
   return errors;
 }
 
-// The resume arrives as a Blob only when the form posted multipart/form-data
-// with a file actually chosen; the optional field being left empty leaves
-// this as '' (from e.parameter), caught by the typeof check below.
-function saveResume_(resume) {
+function saveResume_(payload) {
+  const encodedResume = clean_(payload.resumeData);
+  if (encodedResume) {
+    const bytes = Utilities.base64Decode(encodedResume);
+    if (!bytes.length) {
+      return '';
+    }
+
+    const fileName = clean_(payload.resumeName) || 'resume.pdf';
+    const mimeType = clean_(payload.resumeMimeType) || MimeType.PDF;
+    const blob = Utilities.newBlob(bytes, mimeType, fileName);
+    return createResumeFile_(blob);
+  }
+
+  const resume = payload.resume;
   if (!resume || typeof resume.getBytes !== 'function' || !resume.getBytes().length) {
     return '';
   }
 
+  return createResumeFile_(resume);
+}
+
+function createResumeFile_(blob) {
   const folderId = PropertiesService.getScriptProperties().getProperty('RESUME_FOLDER_ID');
   const folder = folderId ? DriveApp.getFolderById(folderId) : DriveApp.getRootFolder();
-  const file = folder.createFile(resume);
+  const file = folder.createFile(blob);
   file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
   return file.getUrl();
 }
@@ -175,7 +190,10 @@ function postMessageResponse_(payload, data) {
     submissionId: clean_(payload._submissionId)
   });
   const html = '<!doctype html><html><body><script>' +
-    'window.parent.postMessage(' + JSON.stringify(message).replace(/</g, '\\u003c') + ', ' + JSON.stringify(targetOrigin) + ');' +
+    'var message=' + JSON.stringify(message).replace(/</g, '\\u003c') + ';' +
+    'var targetOrigin=' + JSON.stringify(targetOrigin) + ';' +
+    'window.parent.postMessage(message,targetOrigin);' +
+    'if(window.top&&window.top!==window.parent){window.top.postMessage(message,targetOrigin);}' +
     '</script></body></html>';
 
   return HtmlService

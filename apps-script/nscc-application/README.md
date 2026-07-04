@@ -7,15 +7,15 @@ This folder contains the Google Apps Script backend for the static application f
 1. Create a Google Sheet for applications.
 2. Open `script.google.com` and create a new Apps Script project.
 3. Copy `Code.gs` into the Apps Script editor.
-4. Confirm `Code.gs` contains the application sheet ID: `1UbgdiJQuSx3OjTzUIxJut7SGv8G13lrqEcx54raXM6M`.
+4. Confirm `Code.gs` contains the application response sheet ID: `1_tvZiGs-bxQGmG-op90nJ6nwl_aAQxJJKDLo_vAc198`.
 5. Optional: add a script property named `RESUME_FOLDER_ID` with the ID of a Drive folder to store uploaded resumes in. Without it, resumes are saved to the script's Drive root.
 6. Deploy as a Web app:
    - Execute as: `Me`
    - Who has access: `Anyone`
 7. If updating an existing deployment, choose **Manage deployments**, edit the web app deployment, select a **New version**, and deploy. Saving code alone is not enough for `/exec` to run the new code.
 8. Open the `/exec` deployment URL and confirm the JSON includes:
-   - `"version": "2026-07-04-spreadsheet-id-healthcheck"`
-   - `"spreadsheetId": "1UbgdiJQuSx3OjTzUIxJut7SGv8G13lrqEcx54raXM6M"`
+   - `"version": "2026-07-04-resume-base64"`
+   - `"spreadsheetId": "1_tvZiGs-bxQGmG-op90nJ6nwl_aAQxJJKDLo_vAc198"`
    - `"spreadsheetOk": true`
 9. Copy the `/exec` deployment URL.
 10. Paste that URL into `apply/apply-config.js`.
