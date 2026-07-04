@@ -1,9 +1,12 @@
 const DESTINATION_EMAIL = 'inquiries@nsccatunc.org';
+const SCRIPT_VERSION = '2026-07-04-contact-mail';
 
 function doGet() {
   return jsonResponse_({
     ok: true,
-    message: 'NSCC contact endpoint is running.'
+    message: 'NSCC contact endpoint is running.',
+    version: SCRIPT_VERSION,
+    destinationEmail: DESTINATION_EMAIL
   });
 }
 
@@ -109,7 +112,10 @@ function postMessageResponse_(payload, data) {
     submissionId: clean_(payload._submissionId)
   });
   const html = '<!doctype html><html><body><script>' +
-    'window.parent.postMessage(' + JSON.stringify(message).replace(/</g, '\\u003c') + ', ' + JSON.stringify(targetOrigin) + ');' +
+    'var message=' + JSON.stringify(message).replace(/</g, '\\u003c') + ';' +
+    'var targetOrigin=' + JSON.stringify(targetOrigin) + ';' +
+    'window.parent.postMessage(message,targetOrigin);' +
+    'if(window.top&&window.top!==window.parent){window.top.postMessage(message,targetOrigin);}' +
     '</script></body></html>';
 
   return HtmlService
