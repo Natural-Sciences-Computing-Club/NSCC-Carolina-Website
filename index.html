@@ -23,9 +23,16 @@
 
     <!-- ============ MASTHEAD ============ -->
     <header class="masthead" id="masthead">
-        <a href="#top" class="brand">
-            <img src="./assets/nscc-logo-2026.png" alt="NSCC logo" class="brand-mark" width="68" height="34">
-        </a>
+        <button type="button" class="brand logo-toggle" aria-label="Switch NSCC logo" aria-pressed="false">
+            <img
+                src="./assets/nscc-logo-2026.png"
+                data-default-logo="./assets/nscc-logo-2026.png"
+                data-alt-logo="./assets/nscc-logo-white-toggle.png"
+                alt="NSCC logo"
+                class="brand-mark logo-toggle-img"
+                width="68"
+                height="34">
+        </button>
 
         <p class="masthead-meta mono" aria-hidden="true">
             <span>NATURAL SCIENCES COMPUTING CLUB</span>
@@ -272,7 +279,16 @@
     <footer class="footer">
         <div class="footer-grid">
             <div class="footer-brand">
-                <img src="./assets/nscc-logo-2026.png" alt="" width="84" height="42">
+                <button type="button" class="footer-logo-toggle logo-toggle" aria-label="Switch NSCC logo" aria-pressed="false">
+                    <img
+                        src="./assets/nscc-logo-2026.png"
+                        data-default-logo="./assets/nscc-logo-2026.png"
+                        data-alt-logo="./assets/nscc-logo-white-toggle.png"
+                        alt=""
+                        class="logo-toggle-img"
+                        width="84"
+                        height="42">
+                </button>
                 <p class="mono">Natural Sciences Computing Club<br>The University of North Carolina at Chapel Hill</p>
             </div>
             <nav class="footer-links mono" aria-label="Footer">

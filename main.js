@@ -10,6 +10,33 @@
 
 const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+function initLogoToggle() {
+    const controls = Array.from(document.querySelectorAll('.logo-toggle'));
+    const logos = Array.from(document.querySelectorAll('.logo-toggle-img'));
+    if (!controls.length || !logos.length) return;
+
+    let altActive = false;
+
+    function render() {
+        logos.forEach((logo) => {
+            logo.src = altActive ? logo.dataset.altLogo : logo.dataset.defaultLogo;
+        });
+
+        controls.forEach((control) => {
+            control.setAttribute('aria-pressed', String(altActive));
+        });
+    }
+
+    controls.forEach((control) => {
+        control.addEventListener('click', () => {
+            altActive = !altActive;
+            render();
+        });
+    });
+}
+
+initLogoToggle();
+
 /* ==========================================================================
    1. BINARY LANDMARK
    Both landmarks are sampled from their real SVGs into normalized points.

@@ -159,10 +159,31 @@ a:hover { color: var(--carolina); }
     display: flex;
     align-items: center;
     gap: 12px;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
     text-decoration: none;
 }
 
 .brand-mark { display: block; height: 34px; width: auto; }
+
+.logo-toggle-img {
+    display: block;
+    object-fit: contain;
+}
+
+.footer-logo-toggle {
+    background: transparent;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+}
+
+.logo-toggle:focus-visible {
+    outline: 1px solid var(--carolina);
+    outline-offset: 6px;
+}
 
 .masthead-meta {
     display: flex;
