@@ -13,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" href="./assets/fonts/Redaction-Regular.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="./assets/fonts/Redaction_100-Regular.woff2" as="font" type="font/woff2" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400..600&family=Fragment+Mono:ital@0;1&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400..600&family=Fragment+Mono:ital@0;1&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="./styles.css">
 </head>
@@ -35,18 +35,19 @@
                 height="34">
         </button>
 
-        <p class="masthead-meta mono" aria-hidden="true">
-            <span>NATURAL SCIENCES COMPUTING CLUB</span>
+        <p class="masthead-meta" aria-hidden="true">
+            <span class="meta-abbr">Nat. Sci. Comput. Club</span>
             <span class="meta-divider">·</span>
-            <span>35.9049°N&thinsp;79.0469°W</span>
+            <span>Chapel Hill, N.C.</span>
         </p>
 
         <nav class="masthead-nav" id="mastheadNav" aria-label="Primary">
-            <a href="#mission" class="nav-link mono"><sup>01</sup>Mission</a>
-            <a href="#projects" class="nav-link mono"><sup>02</sup>Projects</a>
-            <a href="#events" class="nav-link mono"><sup>03</sup>Events</a>
-            <a href="#people" class="nav-link mono"><sup>04</sup>People</a>
-            <a href="./apply/" class="nav-cta mono">Join&nbsp;→</a>
+            <a href="#mission" class="nav-link"><span class="nav-no">01</span>Mission</a>
+            <a href="#projects" class="nav-link"><span class="nav-no">02</span>Projects</a>
+            <a href="#events" class="nav-link"><span class="nav-no">03</span>Events</a>
+            <a href="#people" class="nav-link"><span class="nav-no">04</span>People</a>
+            <a href="#contact" class="nav-link"><span class="nav-no">06</span>Contact</a>
+            <a href="./apply/" class="nav-cta">Join&nbsp;→</a>
         </nav>
 
         <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mastheadNav">
@@ -269,8 +270,34 @@
                     <p class="join-card-eyebrow mono">Open to all UNC students</p>
                     <p class="join-card-line">No CS major required. Bring a scientific question; we'll help you write the code.</p>
                     <a href="./apply/" class="btn btn-primary btn-block mono">Apply now&nbsp;→</a>
-                    <p class="join-card-foot mono">a short form · no experience assumed</p>
+                    <p class="join-card-foot mono">a short form · no experience assumed<br>
+                        <a href="#contact">questions first? write to us&nbsp;↓</a></p>
                 </aside>
+            </div>
+        </section>
+
+        <!-- ============ 06 · CONTACT ============ -->
+        <section class="section" id="contact">
+            <div class="section-head reveal">
+                <span class="section-no" aria-hidden="true">06</span>
+                <h2 class="section-title">Contact</h2>
+            </div>
+
+            <!-- The correspondence plate: a journal's dagger footnote,
+                 promoted to a full section. -->
+            <div class="contact-plate glass reveal">
+                <p class="contact-eyebrow mono">&dagger;&nbsp;to whom correspondence should be addressed</p>
+                <h3 class="contact-line">Write to us<span class="rx-50" aria-hidden="true">.</span></h3>
+                <p class="contact-lede">
+                    Questions about the club, an idea for a workshop or project, faculty and
+                    industry partnerships — or a dataset that won't behave. Every message
+                    lands in a human inbox.
+                </p>
+                <div class="contact-actions">
+                    <a href="./contact/" class="btn btn-primary mono">Send a message&nbsp;→</a>
+                    <a href="mailto:inquiries@nsccatunc.org" class="btn btn-ghost mono">inquiries@nsccatunc.org</a>
+                </div>
+                <p class="contact-foot mono">no question too small · replies within a few days</p>
             </div>
         </section>
 
@@ -290,9 +317,9 @@
                         width="84"
                         height="42">
                 </button>
-                <p class="mono">Natural Sciences Computing Club<br>The University of North Carolina at Chapel Hill</p>
+                <p>Natural Sciences Computing Club<br>The University of North Carolina at Chapel Hill</p>
             </div>
-            <nav class="footer-links mono" aria-label="Footer">
+            <nav class="footer-links" aria-label="Footer">
                 <a href="#mission">Mission</a>
                 <a href="#projects">Projects</a>
                 <a href="#events">Events</a>
@@ -300,8 +327,9 @@
                 <a href="./apply/">Apply</a>
                 <a href="./contact/">Contact</a>
             </nav>
-            <p class="footer-colophon mono">
-                Set in Redaction, Newsreader &amp; Fragment Mono.<br>
+            <p class="footer-colophon">
+                Set in Redaction, Newsreader,<br>
+                Instrument Sans &amp; Fragment Mono.<br>
                 Dithered by ordered 8×8 Bayer matrix.<br>
                 © <span id="year">2026</span> NSCC · nsccatunc.org
             </p>
