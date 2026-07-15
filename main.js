@@ -84,17 +84,24 @@ const BinaryLandmark = (() => {
 
     function ncLayout() {
         const ncAspect = imgs[0].naturalHeight / imgs[0].naturalWidth;
-        let w, cx, cy;
-        if (isMobile()) {
-            w = Math.min(window.innerWidth * 0.92, 440);
-            cx = vw / 2;
-            cy = hero.offsetHeight * 0.74;
-        } else {
-            w = Math.min(vw * 0.44, 620);
-            cx = vw * 0.68;
-            cy = hero.offsetHeight * 0.52;
-        }
-        const h = w * ncAspect;
+
+        // Cover art: the NC is contain-fit into the band between the issue
+        // line and the bottom of the hero, centered like a journal cover.
+        // offsetTop/offsetHeight ignore CSS transforms, so the measurement
+        // is immune to the reveal animation being mid-flight.
+        const cover = hero.querySelector('.hero-cover');
+        const heroH = hero.offsetHeight;
+        const pad = isMobile() ? 20 : 30;
+        const bandTop = (cover ? cover.offsetTop + cover.offsetHeight : heroH * 0.36) + pad;
+        const bandBottom = heroH - pad;
+
+        let w = isMobile() ? Math.min(window.innerWidth * 0.92, 440) : Math.min(vw * 0.5, 660);
+        let h = w * ncAspect;
+        const maxH = Math.max(120, bandBottom - bandTop);
+        if (h > maxH) { h = maxH; w = h / ncAspect; }
+
+        const cx = vw / 2;
+        const cy = (bandTop + bandBottom) / 2;
         return { x: cx - w / 2, y: cy - h / 2, w, h };
     }
 
@@ -426,6 +433,12 @@ const BinaryLandmark = (() => {
             canvas._rt = setTimeout(resize, 150);
         });
 
+        // The nameplate's height moves when Redaction swaps in over the
+        // fallback serif; re-measure the cover band once fonts settle.
+        if (document.fonts && document.fonts.ready) {
+            document.fonts.ready.then(() => { if (loaded) resize(); });
+        }
+
         window.addEventListener('scroll', updateScrollState, { passive: true });
 
         document.addEventListener('visibilitychange', () => {
@@ -694,24 +707,10 @@ function initLenis() {
     }
 }
 
-function initBinStream() {
-    const el = document.getElementById('binStream');
-    if (!el || REDUCED_MOTION) return;
-    setInterval(() => {
-        let s = '';
-        for (let i = 0; i < 4; i++) {
-            for (let j = 0; j < 8; j++) s += Math.random() < 0.5 ? '0' : '1';
-            s += ' ';
-        }
-        el.textContent = s.trim();
-    }, 600);
-}
-
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('year').textContent = new Date().getFullYear();
     initMasthead();
     initCalendar();
     initReveals();
     initLenis();
-    initBinStream();
 });

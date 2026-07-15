@@ -159,8 +159,8 @@ a:hover { color: var(--carolina); }
     border-bottom-color: var(--hairline);
 }
 
-/* Ledger double rule under the running head — the companion hairline
-   the hero-foot already uses, appearing once the head is "in print". */
+/* Ledger double rule under the running head — the mark old account
+   ledgers use to close out a block, appearing once the head is "in print". */
 .masthead::after {
     content: '';
     position: absolute;
@@ -307,11 +307,10 @@ body.nav-open .nav-toggle span:last-child { transform: translateY(-3.25px) rotat
     min-height: 100svh;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    padding: calc(var(--masthead-h) + 40px) var(--gutter) 0;
+    padding: calc(var(--masthead-h) + clamp(28px, 6vh, 60px)) var(--gutter) 0;
     overflow: hidden;
     background:
-        radial-gradient(1100px 520px at 78% 42%, rgba(75, 156, 211, 0.09), transparent 68%),
+        radial-gradient(1100px 560px at 50% 68%, rgba(75, 156, 211, 0.09), transparent 68%),
         var(--ink);
 }
 
@@ -330,81 +329,61 @@ body.nav-open .nav-toggle span:last-child { transform: translateY(-3.25px) rotat
     height: 100%;
 }
 
-.hero-inner {
+.hero-cover {
     position: relative;
     z-index: 2;
-    max-width: 700px;
     pointer-events: none;
 }
 
-.hero-inner a { pointer-events: auto; }
+.hero-cover a { pointer-events: auto; }
 
-.eyebrow {
-    color: var(--carolina);
-    margin-bottom: 26px;
-}
-
-.hero-title {
+.cover-name {
     font-family: var(--display);
-    font-size: clamp(2.7rem, 6.6vw, 4.7rem);
+    font-size: clamp(2.2rem, 7.2vw, 5.3rem);
     font-weight: 400;
     line-height: 1.04;
     letter-spacing: -0.01em;
-    margin-bottom: 30px;
+    margin: 0;
 }
 
-/* The thesis, typeset: the first sentence is the clean cut of Redaction;
-   the second discretizes glyph by glyph through the degraded cuts —
-   stopping at the mid cuts so the words stay whole — and takes on the
-   data's color as it goes. */
-.hero-decay .w { white-space: nowrap; }
+/* The nameplate performs the thesis: "The Natural Sciences" is the clean
+   cut of Redaction; "Computing Club" discretizes glyph by glyph through
+   the degraded cuts — stopping at the mid cuts so the words stay whole —
+   and takes on the data's color as it goes. */
+.w { white-space: nowrap; }
 .rx-0  { font-family: var(--display); }
 .rx-20 { font-family: 'Redaction 20', var(--display); }
 .rx-35 { font-family: 'Redaction 35', var(--display); color: #C4DAEC; }
 .rx-50 { font-family: 'Redaction 50', var(--display); color: var(--sky); }
 .rx-50.cx { color: var(--carolina); }
 
-.hero-lede {
-    font-size: clamp(1.02rem, 1.5vw, 1.2rem);
-    color: var(--slate);
-    max-width: 47ch;
-    margin-bottom: 40px;
-}
-
-.hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
-
-/* Ledger double rule: a thin companion hairline just under the main one —
-   the mark old account ledgers and book colophons use to close out a
-   block, rather than a single generic divider. */
-.hero-foot {
-    position: relative;
-    z-index: 2;
+/* The issue line: a journal cover's metadata rule between nameplate and
+   cover art — place, institution, and the one dated fact that matters. */
+.cover-issue {
     display: flex;
-    gap: 22px;
-    align-items: center;
-    padding: 20px 0;
-    margin-top: auto;
-    border-top: 1px solid var(--hairline);
+    gap: clamp(18px, 3vw, 40px);
+    align-items: baseline;
+    border-top: 1px solid var(--hairline-strong);
+    margin-top: clamp(20px, 3.2vh, 36px);
+    padding-top: 13px;
+    font-style: italic;
     color: var(--slate);
-    font-size: 0.62rem;
+    font-size: 0.92rem;
 }
 
-.hero-foot::before {
-    content: '';
-    position: absolute;
-    top: 4px;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: var(--hairline);
-    opacity: 0.55;
-}
-
-.hero-foot-right {
+.cover-issue-right {
     margin-left: auto;
-    color: rgba(75, 156, 211, 0.55);
-    font-variant-numeric: tabular-nums;
+    font-family: var(--chrome);
+    font-style: normal;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--sky);
+    text-decoration: none;
 }
+
+.cover-issue-right:hover { color: var(--carolina); }
 
 /* ==================== buttons ==================== */
 
@@ -1158,9 +1137,9 @@ body.nav-open .nav-toggle span:last-child { transform: translateY(-3.25px) rotat
     .nav-no { font-size: 0.8rem; }
     .nav-cta { margin-top: 10px; font-size: 1rem; }
 
-    .hero { padding-top: calc(var(--masthead-h) + 24px); }
-    .hero-foot { flex-wrap: wrap; gap: 12px; }
-    .hero-foot-right { display: none; }
+    .hero { padding-top: calc(var(--masthead-h) + 22px); }
+    .cover-issue { flex-wrap: wrap; row-gap: 4px; }
+    .cover-issue-uni { display: none; }
 
     .section-head { flex-wrap: wrap; }
     .cal-day { border-radius: 7px; font-size: 0.68rem; }
