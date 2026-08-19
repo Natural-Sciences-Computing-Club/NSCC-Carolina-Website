@@ -363,7 +363,6 @@ body.nav-open .nav-toggle span:last-child { transform: translateY(-3.25px) rotat
     display: flex;
     gap: clamp(18px, 3vw, 40px);
     align-items: baseline;
-    border-top: 1px solid var(--hairline-strong);
     margin-top: clamp(20px, 3.2vh, 36px);
     padding-top: 13px;
     font-style: italic;
