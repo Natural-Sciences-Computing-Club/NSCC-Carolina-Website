@@ -653,7 +653,79 @@ function initCalendar() {
 }
 
 /* ==========================================================================
-   3. MASTHEAD, REVEALS, SMOOTH SCROLL, DETAILS
+   3. PROJECT CAROUSEL
+   The projects occupy the same figure-card footprint. Only the track moves,
+   keeping the page's vertical rhythm intact while the arrows and a touch
+   swipe switch between the two cards.
+   ========================================================================== */
+
+function initProjectCarousel() {
+    const carousel = document.querySelector('[data-project-carousel]');
+    const track = document.getElementById('projectTrack');
+    const previous = document.getElementById('projectPrevious');
+    const next = document.getElementById('projectNext');
+    const status = document.getElementById('projectStatus');
+    if (!carousel || !track || !previous || !next) return;
+
+    const panels = Array.from(track.querySelectorAll('.project-panel'));
+    const viewport = carousel.querySelector('.project-viewport');
+    if (panels.length < 2 || !viewport) return;
+
+    let active = 1;
+    let pointerStart = null;
+    let suppressClick = false;
+
+    function render() {
+        track.style.transform = `translateX(-${active * 100}%)`;
+        panels.forEach((panel, index) => {
+            const isActive = index === active;
+            panel.setAttribute('aria-hidden', String(!isActive));
+            panel.inert = !isActive;
+        });
+
+        if (status) {
+            const title = panels[active].querySelector('.figure-title')?.textContent.trim() || 'Project';
+            status.textContent = `Project ${active + 1} of ${panels.length}: ${title}`;
+        }
+    }
+
+    function move(direction) {
+        active = (active + direction + panels.length) % panels.length;
+        render();
+    }
+
+    previous.addEventListener('click', () => move(-1));
+    next.addEventListener('click', () => move(1));
+
+    viewport.addEventListener('pointerdown', (event) => {
+        if (event.pointerType !== 'touch') return;
+        pointerStart = { x: event.clientX, y: event.clientY };
+    }, { passive: true });
+
+    viewport.addEventListener('pointerup', (event) => {
+        if (!pointerStart || event.pointerType !== 'touch') return;
+        const deltaX = event.clientX - pointerStart.x;
+        const deltaY = event.clientY - pointerStart.y;
+        pointerStart = null;
+
+        if (Math.abs(deltaX) < 48 || Math.abs(deltaX) <= Math.abs(deltaY)) return;
+        move(deltaX < 0 ? 1 : -1);
+        suppressClick = true;
+        window.setTimeout(() => { suppressClick = false; }, 0);
+    }, { passive: true });
+
+    viewport.addEventListener('pointercancel', () => { pointerStart = null; }, { passive: true });
+    viewport.addEventListener('click', (event) => {
+        if (!suppressClick) return;
+        event.preventDefault();
+        event.stopPropagation();
+    }, true);
+
+    render();
+}
+
+/* ==========================================================================
+   4. MASTHEAD, REVEALS, SMOOTH SCROLL, DETAILS
    ========================================================================== */
 
 function initMasthead() {
@@ -710,6 +782,7 @@ function initLenis() {
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('year').textContent = new Date().getFullYear();
     initMasthead();
+    initProjectCarousel();
     initCalendar();
     initReveals();
     initLenis();

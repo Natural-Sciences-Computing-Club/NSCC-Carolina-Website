@@ -117,33 +117,90 @@
             <div class="section-head reveal">
                 <span class="section-no" aria-hidden="true">02</span>
                 <h2 class="section-title">Projects</h2>
+                <div class="project-controls" aria-label="Browse projects">
+                    <button type="button" class="project-arrow" id="projectPrevious" aria-label="Show previous project" aria-controls="projectTrack">&larr;</button>
+                    <button type="button" class="project-arrow" id="projectNext" aria-label="Show next project" aria-controls="projectTrack">&rarr;</button>
+                </div>
             </div>
 
-            <article class="figure-card glass reveal">
-                <a class="figure-media" href="https://williethewhale.github.io/Kuramoto_Neural/" target="_blank" rel="noopener noreferrer" aria-label="Open the Kuramoto Neural Synchronization Simulator">
-                    <img class="figure-img figure-img-dither" src="./assets/kuramoto-dither.png" alt="" aria-hidden="true" loading="lazy" decoding="async">
-                    <img class="figure-img figure-img-full" src="./assets/kuramoto.png" alt="Screenshot of the Kuramoto Neural Synchronization Simulator interface" loading="lazy" decoding="async">
-                    <span class="figure-tag mono">fig. 1 — phase coherence, human connectome</span>
-                </a>
+            <div class="project-carousel reveal" data-project-carousel>
+                <p class="sr-only" id="projectStatus" aria-live="polite">Project 2 of 3: Time-dependent quantum tunnelling</p>
+                <div class="project-viewport">
+                    <div class="project-track" id="projectTrack" style="transform: translateX(-100%);">
+                        <article class="project-panel figure-card glass" aria-labelledby="kuramotoTitle" aria-hidden="true" inert>
+                            <a class="figure-media" href="https://williethewhale.github.io/Kuramoto_Neural/" target="_blank" rel="noopener noreferrer" aria-label="Open the Kuramoto Neural Synchronization Simulator">
+                                <img class="figure-img figure-img-dither" src="./assets/kuramoto-dither.png" alt="" aria-hidden="true" loading="lazy" decoding="async">
+                                <img class="figure-img figure-img-full" src="./assets/kuramoto.png" alt="Screenshot of the Kuramoto Neural Synchronization Simulator interface" loading="lazy" decoding="async">
+                                <span class="figure-tag mono">fig. 3 — phase coherence, human connectome</span>
+                            </a>
 
-                <div class="figure-body">
-                    <h3 class="figure-title">NSCC Neural Kuramoto Synchronization Simulator</h3>
-                    <p class="figure-text">
-                        The NSCC Neural Kuramoto Synchronization Simulator is an interactive visualization tool that models the emergent synchronization dynamics of coupled neural oscillators across the human brain's connectome. Built upon the Kuramoto model—a mathematical framework for studying synchronization phenomena in complex systems—this simulator leverages real structural connectivity data from the Human Connectome Project to demonstrate how neural hubs coordinate rhythmic activity across distributed brain regions. By adjusting coupling strength and observing the resulting phase coherence patterns, users can explore fundamental principles of neural synchrony that underlie cognition, perception, and neurological disorders. This project bridges computational neuroscience with accessible, hands-on learning, enabling students to engage directly with cutting-edge research methodologies.
-                    </p>
-                    <a href="https://williethewhale.github.io/Kuramoto_Neural/" target="_blank" rel="noopener noreferrer" class="btn btn-primary mono">Try our simulator&nbsp;↗</a>
+                            <div class="figure-body">
+                                <h3 class="figure-title" id="kuramotoTitle">NSCC Neural Kuramoto Synchronization Simulator</h3>
+                                <p class="figure-text">
+                                    The NSCC Neural Kuramoto Synchronization Simulator is an interactive visualization tool that models the emergent synchronization dynamics of coupled neural oscillators across the human brain's connectome. Built upon the Kuramoto model—a mathematical framework for studying synchronization phenomena in complex systems—this simulator leverages real structural connectivity data from the Human Connectome Project to demonstrate how neural hubs coordinate rhythmic activity across distributed brain regions. By adjusting coupling strength and observing the resulting phase coherence patterns, users can explore fundamental principles of neural synchrony that underlie cognition, perception, and neurological disorders. This project bridges computational neuroscience with accessible, hands-on learning, enabling students to engage directly with cutting-edge research methodologies.
+                                </p>
+                                <a href="https://williethewhale.github.io/Kuramoto_Neural/" target="_blank" rel="noopener noreferrer" class="btn btn-primary mono">Try our simulator&nbsp;↗</a>
 
-                    <div class="figure-refs">
-                        <h4 class="refs-title mono">References &amp; data sources</h4>
-                        <ol class="refs-list">
-                            <li>Schmidt, R., et al. "Kuramoto Model Simulation of Neural Hubs and Dynamic Synchrony in the Human Cerebral Connectome." <em>BMC Neuroscience</em>, vol. 16, no. 54, 2015. <a href="https://doi.org/10.1186/s12868-015-0193-z" target="_blank" rel="noopener noreferrer">doi:10.1186/s12868-015-0193-z</a></li>
-                            <li>Van Essen, D.C., et al. "The WU-Minn Human Connectome Project: An Overview." <em>NeuroImage</em>, vol. 80, 2013, pp. 62–79. <a href="https://doi.org/10.1016/j.neuroimage.2013.05.041" target="_blank" rel="noopener noreferrer">doi:10.1016/j.neuroimage.2013.05.041</a></li>
-                            <li>Ódor, G., and Kelling, J. "Critical Synchronization Dynamics of the Kuramoto Model on Connectome and Small World Graphs." <em>arXiv</em>, 2019. <a href="https://arxiv.org/abs/1903.00385" target="_blank" rel="noopener noreferrer">arXiv:1903.00385</a></li>
-                            <li>Human Connectome Project. <em>1200 Subjects Data Release</em>. WU-Minn Consortium, 2017. <a href="https://www.humanconnectome.org/study/hcp-young-adult/document/1200-subjects-data-release" target="_blank" rel="noopener noreferrer">humanconnectome.org</a></li>
-                        </ol>
+                                <div class="figure-refs">
+                                    <h4 class="refs-title mono">References &amp; data sources</h4>
+                                    <ol class="refs-list">
+                                        <li>Schmidt, R., et al. "Kuramoto Model Simulation of Neural Hubs and Dynamic Synchrony in the Human Cerebral Connectome." <em>BMC Neuroscience</em>, vol. 16, no. 54, 2015. <a href="https://doi.org/10.1186/s12868-015-0193-z" target="_blank" rel="noopener noreferrer">doi:10.1186/s12868-015-0193-z</a></li>
+                                        <li>Van Essen, D.C., et al. "The WU-Minn Human Connectome Project: An Overview." <em>NeuroImage</em>, vol. 80, 2013, pp. 62–79. <a href="https://doi.org/10.1016/j.neuroimage.2013.05.041" target="_blank" rel="noopener noreferrer">doi:10.1016/j.neuroimage.2013.05.041</a></li>
+                                        <li>Ódor, G., and Kelling, J. "Critical Synchronization Dynamics of the Kuramoto Model on Connectome and Small World Graphs." <em>arXiv</em>, 2019. <a href="https://arxiv.org/abs/1903.00385" target="_blank" rel="noopener noreferrer">arXiv:1903.00385</a></li>
+                                        <li>Human Connectome Project. <em>1200 Subjects Data Release</em>. WU-Minn Consortium, 2017. <a href="https://www.humanconnectome.org/study/hcp-young-adult/document/1200-subjects-data-release" target="_blank" rel="noopener noreferrer">humanconnectome.org</a></li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="project-panel figure-card glass" aria-labelledby="tunnellingTitle">
+                            <figure class="figure-media">
+                                <img class="figure-img figure-img-dither" src="./assets/tunnelling-dither.png" alt="" aria-hidden="true" loading="lazy" decoding="async">
+                                <img class="figure-img figure-img-full" src="./assets/tunnelling.png" alt="A gridded quantum tunnel illuminated by a bright electric-field pulse" loading="lazy" decoding="async">
+                                <figcaption class="figure-tag mono">fig. 1 — driven tunnelling, pulsed field</figcaption>
+                            </figure>
+
+                            <div class="figure-body">
+                                <h3 class="figure-title" id="tunnellingTitle">Time-dependent quantum tunnelling</h3>
+                                <div class="project-copy">
+                                    <p>Tunnelling is quantum mechanics&rsquo; textbook signature: a particle crosses a barrier it could never surmount classically. This project asks how that picture changes when a strong, time-varying electric field shakes the barrier faster than the particle can respond.</p>
+                                    <p>The solver integrates the time-dependent Schr&ouml;dinger equation from first principles. Finite elements and a Galerkin projection turn the continuous problem into a mass matrix <em>M</em>, a stiffness matrix <em>K</em>, and a time-dependent potential <em>V</em>(<em>t</em>), concentrating mesh resolution where the wavefunction changes fastest.</p>
+                                    <p>Crank&ndash;Nicolson time stepping is second-order accurate, unconditionally stable, and unitary, preserving total probability through long propagations. The resulting open framework targets pulsed-field tunnelling at the edge of attosecond science, ultrafast electronics, and quantum devices.</p>
+                                </div>
+
+                                <dl class="project-details">
+                                    <div><dt class="mono">equation</dt><dd>Time-dependent Schr&ouml;dinger equation</dd></div>
+                                    <div><dt class="mono">space</dt><dd>Finite elements &middot; Galerkin projection</dd></div>
+                                    <div><dt class="mono">time</dt><dd>Crank&ndash;Nicolson &middot; norm conserving</dd></div>
+                                </dl>
+                            </div>
+                        </article>
+
+                        <article class="project-panel figure-card glass" aria-labelledby="braggpeekTitle" aria-hidden="true" inert>
+                            <figure class="figure-media">
+                                <img class="figure-img figure-img-dither" src="./assets/braggpeek-dither.png" alt="" aria-hidden="true" loading="lazy" decoding="async">
+                                <img class="figure-img figure-img-full" src="./assets/braggpeek.png" alt="A simulated proton beam forming a narrow Bragg peak at depth through a gridded research phantom" loading="lazy" decoding="async">
+                                <figcaption class="figure-tag mono">fig. 2 — proton transport, depth-dose peak</figcaption>
+                            </figure>
+
+                            <div class="figure-body">
+                                <h3 class="figure-title" id="braggpeekTitle">BraggPeek &mdash; learned proton transport</h3>
+                                <div class="project-copy">
+                                    <p>Proton beams deposit comparatively little energy on entry, concentrate it near a terminal Bragg peak, then stop. BraggPeek is research software for reconstructing that depth-dose structure with fast candidate models while keeping the boundary between approximation and physical reference explicit.</p>
+                                    <p>Its physics layer combines analytic CSDA/Bortfeld range and stopping-power models, stochastic SDE transport, NIST PSTAR tables, and separately preserved OpenGATE/Geant4 reference runs. BraggTransporter adds physics-prior features to beam and material descriptors, then learns one-dimensional dose, LET, fluence, and range profiles with a coordinate-query model.</p>
+                                    <p>Every run records its inputs and artifacts for replay, then checks peak position, distal range, gamma agreement, and uncertainty. Calibrated uncertainty and out-of-distribution abstention make the model&rsquo;s limits visible. It is a reproducible research platform, not a clinical tool.</p>
+                                </div>
+
+                                <dl class="project-details">
+                                    <div><dt class="mono">physics</dt><dd>CSDA, SDE, PSTAR &middot; OpenGATE references</dd></div>
+                                    <div><dt class="mono">model</dt><dd>Physics prior &middot; coordinate-query learner</dd></div>
+                                    <div><dt class="mono">checks</dt><dd>Range, gamma &middot; calibrated OOD uncertainty</dd></div>
+                                </dl>
+                            </div>
+                        </article>
                     </div>
                 </div>
-            </article>
+            </div>
         </section>
 
         <!-- ============ 03 · EVENTS ============ -->

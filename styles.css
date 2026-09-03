@@ -124,6 +124,18 @@ a:hover { color: var(--carolina); }
     outline-offset: 3px;
 }
 
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
 /* ==================== dither grain overlay ==================== */
 
 .grain {
@@ -566,6 +578,54 @@ body.nav-open .nav-toggle span:last-child { transform: translateY(-3.25px) rotat
 
 /* ==================== projects / figure card ==================== */
 
+.project-controls {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.project-arrow {
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 1px solid var(--hairline-strong);
+    border-radius: 0;
+    background: transparent;
+    color: var(--paper);
+    font-family: var(--mono);
+    font-size: 1rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: border-color .25s ease, color .25s ease, background-color .25s ease;
+}
+
+.project-arrow:hover {
+    border-color: var(--carolina);
+    color: var(--ink);
+    background: url('./assets/bayer-25.png') var(--sky);
+}
+
+.project-viewport {
+    overflow: hidden;
+    touch-action: pan-y;
+}
+
+.project-track {
+    display: flex;
+    width: 100%;
+    transform: translateX(0);
+    transition: transform .55s cubic-bezier(.22, .61, .36, 1);
+    will-change: transform;
+}
+
+.project-panel {
+    flex: 0 0 100%;
+    min-width: 0;
+}
+
 .figure-card { overflow: hidden; --cut: 28px; }
 
 .figure-media {
@@ -618,6 +678,36 @@ body.nav-open .nav-toggle span:last-child { transform: translateY(-3.25px) rotat
     color: var(--slate);
     margin-bottom: 28px;
     max-width: 75ch;
+}
+
+.project-copy {
+    display: grid;
+    gap: 16px;
+    max-width: 75ch;
+    margin-bottom: 28px;
+    color: var(--slate);
+}
+
+.project-details {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    padding-top: 24px;
+    border-top: 1px solid var(--hairline);
+}
+
+.project-details div { min-width: 0; }
+
+.project-details dt {
+    margin-bottom: 6px;
+    color: var(--carolina);
+    font-size: 0.6rem;
+}
+
+.project-details dd {
+    color: var(--slate);
+    font-size: 0.82rem;
+    line-height: 1.5;
 }
 
 .figure-refs {
